@@ -40,19 +40,9 @@ public class DBConnection {
                 + "name TEXT NOT NULL,"
                 + "username TEXT NOT NULL,"
                 + "password TEXT NOT NULL,"
-                + "lastLogin TEXT NOT NULL,"
                 + "email TEXT NOT NULL,"
                 + "key TEXT NOT NULL,"
-                + "type INTEGER NOT NULL,"
-                + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (type) REFERENCES type(id) ON DELETE CASCADE"
-                + ");",
-                //
-                // table type
-                "CREATE TABLE type("
-                + "id INTEGER NOT NULL,"
-                + "name TEXT NOT NULL,"
-                + "description TEXT,"
+                + "type INTEGER NOT NULL," // 1 = QS, 2 = Seller
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
@@ -80,9 +70,9 @@ public class DBConnection {
                 "CREATE TABLE customer("
                 + "id INTEGER NOT NULL,"
                 + "qs INTEGER NOT NULL,"
-                + "plans INTEGER NOT NULL,"
                 + "name TEXT NOT NULL,"
-                + "email TEXT,"
+                + "email TEXT NOT NULL,"
+                + "count INTEGER NOT NULL"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (qs) REFERENCES login(id) ON DELETE CASCADE"
                 + ");",
@@ -93,7 +83,6 @@ public class DBConnection {
                 + "customer INTEGER NOT NULL,"
                 + "material INTEGER NOT NULL,"
                 + "plan INTEGER NOT NULL,"
-                + "count INTEGER NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (customer) REFERENCES customer(id) "
                 + "ON DELETE CASCADE,"

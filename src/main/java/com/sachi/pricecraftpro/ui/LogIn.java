@@ -1,8 +1,8 @@
 package com.sachi.pricecraftpro.ui;
 
 import com.sachi.pricecraftpro.db.DBConnection;
-import com.sachi.pricecraftpro.ui.qs.CRUDCustomer;
-import com.sachi.pricecraftpro.ui.seller.CRUDItem;
+import com.sachi.pricecraftpro.ui.qs.Customer;
+import com.sachi.pricecraftpro.ui.seller.Item;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +21,7 @@ public class LogIn extends javax.swing.JFrame {
     }
 
     Connection conn = null;
+    public static int id = 0;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -163,12 +164,13 @@ public class LogIn extends javax.swing.JFrame {
                 switch (jComboBox1.getSelectedIndex()) {
                     case 1 -> {
                         // goto qs
-                        new CRUDCustomer().setVisible(true);
+                        new Customer().setVisible(true);
                     }
                     case 2 -> {
                         // goto seller
-                        new CRUDItem().setVisible(true);
+                        new Item().setVisible(true);
                     }
+
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid credentials!");
@@ -188,13 +190,14 @@ public class LogIn extends javax.swing.JFrame {
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                ResultSet rs = stmt.executeQuery("SELECT COUNT(id), id "
                         + "FROM login "
                         + "WHERE type = '" + type + "' AND "
                         + "username = '" + username + "' AND "
                         + "password = '" + password + "'");
                 while (rs.next()) {
                     if (rs.getInt(1) != 0) {
+                        id = rs.getInt(2);
                         return true;
                     }
                 }
