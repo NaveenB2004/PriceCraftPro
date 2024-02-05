@@ -37,60 +37,60 @@ public class DBConnection {
             String[] query = {
                 // table login
                 "CREATE TABLE login("
-                + "id INT(3) NOT NULL AUTOINCREMENT,"
-                + "name VARCHAR(50) NOT NULL,"
-                + "username VARCHAR(16) NOT NULL,"
-                + "password VARCHAR(16) NOT NULL,"
-                + "lastLogin VARCHAR(50) NOT NULL,"
-                + "email VARCHAR(100) NOT NULL,"
-                + "key VARCHAR(20) NOT NULL,"
-                + "type INT(2) NOT NULL,"
+                + "id INTEGER NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "username TEXT NOT NULL,"
+                + "password TEXT NOT NULL,"
+                + "lastLogin TEXT NOT NULL,"
+                + "email TEXT NOT NULL,"
+                + "key TEXT NOT NULL,"
+                + "type INTEGER NOT NULL,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
                 // table type
                 "CREATE TABLE type("
-                + "id INT(2) NOT NULL AUTOINCREMENT,"
-                + "name VARCHAR(10) NOT NULL,"
-                + "description VARCHAR(50),"
+                + "id INTEGER NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "description TEXT,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
                 // table material
                 "CREATE TABLE material("
-                + "id INT(5) NOT NULL AUTOINCREMENT,"
-                + "name VARCHAR(50) NOT NULL,"
-                + "price DECIMAL(8, 2) NOT NULL,"
-                + "category INT(3) NOT NULL,"
-                + "parent INT(3) NOT NULL,"
+                + "id INTEGER NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "price REAL NOT NULL,"
+                + "category INTEGER NOT NULL,"
+                + "parent INTEGER NOT NULL,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
                 // table category
                 "CREATE TABLE category("
-                + "id INT(3) NOT NULL AUTOINCREMENT,"
-                + "name VARCHAR(30) NOT NULL,"
-                + "description VARCHAR(50),"
+                + "id INTEGER NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "description TEXT,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
                 // table customer
                 "CREATE TABLE customer("
-                + "id INT(6) NOT NULL AUTOINCREMENT,"
-                + "qs INT(3) NOT NULL,"
-                + "plans INT(2) NOT NULL,"
-                + "name VARCHAR(50) NOT NULL,"
-                + "email VARCHAR(50),"
+                + "id INTEGER NOT NULL,"
+                + "qs INTEGER NOT NULL,"
+                + "plans INTEGER NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "email TEXT,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
                 // table cart
                 "CREATE TABLE cart("
-                + "id INT(6) NOT NULL AUTOINCREMENT,"
-                + "customer INT(6) NOT NULL,"
-                + "material INT(5) NOT NULL,"
-                + "plan INT(2) NOT NULL,"
-                + "count INT(3) NOT NULL,"
+                + "id INTEGER NOT NULL,"
+                + "customer INTEGER NOT NULL,"
+                + "material INTEGER NOT NULL,"
+                + "plan INTEGER NOT NULL,"
+                + "count INTEGER NOT NULL,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
