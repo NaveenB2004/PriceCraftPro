@@ -8,6 +8,8 @@ public class Cart extends javax.swing.JFrame {
     public Cart() {
         initComponents();
     }
+    
+    public static String id = null;
 
     /**
      * This method is called from within the constructor to initialize the form.
