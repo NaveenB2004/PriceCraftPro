@@ -35,6 +35,9 @@ public class DBConnection {
         Path path = Paths.get(DB);
         if (Files.notExists(path)) {
             String[] query = {
+                // turn off foreign keys
+                "PRAGMA foreign_keys = OFF",
+                //
                 // table login
                 "CREATE TABLE login("
                 + "id INTEGER NOT NULL,"
@@ -45,7 +48,8 @@ public class DBConnection {
                 + "email TEXT NOT NULL,"
                 + "key TEXT NOT NULL,"
                 + "type INTEGER NOT NULL,"
-                + "PRIMARY KEY (id)"
+                + "PRIMARY KEY (id),"
+                + "FOREIGN KEY (type) REFERENCES type(id) ON DELETE CASCADE"
                 + ");",
                 //
                 // table type
@@ -63,7 +67,9 @@ public class DBConnection {
                 + "price REAL NOT NULL,"
                 + "category INTEGER NOT NULL,"
                 + "parent INTEGER NOT NULL,"
-                + "PRIMARY KEY (id)"
+                + "PRIMARY KEY (id),"
+                + "FOREIGN KEY (category) REFERENCES category(id) "
+                + "ON DELETE CASCADE"
                 + ");",
                 //
                 // table category
@@ -81,7 +87,8 @@ public class DBConnection {
                 + "plans INTEGER NOT NULL,"
                 + "name TEXT NOT NULL,"
                 + "email TEXT,"
-                + "PRIMARY KEY (id)"
+                + "PRIMARY KEY (id),"
+                + "FOREIGN KEY (qs) REFERENCES login(id) ON DELETE CASCADE"
                 + ");",
                 //
                 // table cart
@@ -91,25 +98,12 @@ public class DBConnection {
                 + "material INTEGER NOT NULL,"
                 + "plan INTEGER NOT NULL,"
                 + "count INTEGER NOT NULL,"
-                + "PRIMARY KEY (id)"
+                + "PRIMARY KEY (id),"
+                + "FOREIGN KEY (customer) REFERENCES customer(id) "
+                + "ON DELETE CASCADE,"
+                + "FOREIGN KEY (material) REFERENCES material(id) "
+                + "ON DELETE CASCADE"
                 + ");",
-                //
-                // foreign key type -> login
-                "ALTER TABLE login "
-                + "ADD FOREIGN KEY (type) REFERENCES type(id);",
-                //
-                // foreign key category -> material
-                "ALTER TABLE material "
-                + "ADD FOREIGN KEY (category) REFERENCES category(id);",
-                //
-                // foreign key login -> customer
-                "ALTER TABLE customer "
-                + "ADD FOREIGN KEY (qs) REFERENCES login(id);",
-                //
-                // foreign key customer -> cart, material -> cart
-                "ALTER TABLE cart "
-                + "ADD FOREIGN KEY (customer) REFERENCES customer(id),"
-                + "ADD FOREIGN KEY (material) REFERENCES material(id);",
                 //
                 // add account types
                 "INSERT INTO type VALUES "
@@ -120,12 +114,15 @@ public class DBConnection {
                 "INSERT INTO login VALUES "
                 + "(1, 'Seller X', 'seller', 'seller', '0', 'seller@example.com',"
                 + " 'password', 1),"
-                + "(2, 'QS X', 'qs', 'qs', '0', 'qs@example.com', 'password', 2);"
+                + "(2, 'QS X', 'qs', 'qs', '0', 'qs@example.com', 'password', 2);",
+                //
+                // turn on foreign keys
+                "PRAGMA foreign_keys = ON"
             };
 
-            for (int i = 0; i < query.length; i++) {
+            for (String queryX : query) {
                 try (Statement stmt = con().createStatement()) {
-                    stmt.executeQuery(query[i]);
+                    stmt.execute(queryX);
                 } catch (SQLException ex) {
                     Logger.getLogger(DBConnection.class.getName())
                             .log(Level.SEVERE, null, ex);
