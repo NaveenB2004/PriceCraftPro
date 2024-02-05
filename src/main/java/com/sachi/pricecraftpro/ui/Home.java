@@ -131,7 +131,7 @@ public class Home extends javax.swing.JFrame {
                 .addGap(23, 23, 23))
         );
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smart-city (1).png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/smart-city (1).png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
