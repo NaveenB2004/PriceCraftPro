@@ -1,6 +1,7 @@
 package com.sachi.pricecraftpro.ui.qs;
 
 import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Customer extends javax.swing.JFrame {
@@ -125,6 +127,11 @@ public class Customer extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jButton1.setText("Sign-Out");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -151,11 +158,26 @@ public class Customer extends javax.swing.JFrame {
 
         jButton2.setText("Update");
         jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Delete");
         jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Add");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Clear");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -284,12 +306,12 @@ public class Customer extends javax.swing.JFrame {
         String cusId = (String) model.getValueAt(jTable1.getSelectedRow(), 0);
         String name = (String) model.getValueAt(jTable1.getSelectedRow(), 1);
         String mail = (String) model.getValueAt(jTable1.getSelectedRow(), 2);
-        
+
         jButton5.setEnabled(true);
         jButton3.setEnabled(true);
         jButton2.setEnabled(true);
         jButton4.setEnabled(false);
-        
+
         jLabel4.setText(cusId);
         jTextField1.setText(name);
         jTextField2.setText(mail);
@@ -297,9 +319,12 @@ public class Customer extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jTable1.clearSelection();
+
         jButton5.setEnabled(false);
         jButton3.setEnabled(false);
         jButton2.setEnabled(false);
+        jButton4.setEnabled(true);
+
         jTextField1.setText("");
         jTextField2.setText("");
         jLabel4.setText("---");
@@ -310,6 +335,81 @@ public class Customer extends javax.swing.JFrame {
         new Cart().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            conn = new DBConnection().CONN();
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("DELETE FROM customer "
+                    + "WHERE id = '" + jLabel4.getText() + "'");
+            startup();
+            jButton6ActionPerformed(evt);
+            JOptionPane.showMessageDialog(this, "Success!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Customer.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            conn = new DBConnection().CONN();
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("UPDATE customer "
+                    + "SET name = '" + jTextField1.getText() + "', "
+                    + "email = '" + jTextField2.getText() + "' "
+                    + "WHERE id = '" + jLabel4.getText() + "'");
+            startup();
+            jButton6ActionPerformed(evt);
+            JOptionPane.showMessageDialog(this, "Success!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Customer.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try {
+            conn = new DBConnection().CONN();
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("INSERT INTO customer "
+                    + "(qs, name, email, count) VALUES "
+                    + "('" + LogIn.id + "', '" + jTextField1.getText() + "', "
+                    + "'" + jTextField2.getText() + "', 0)");
+            startup();
+            jButton6ActionPerformed(evt);
+            JOptionPane.showMessageDialog(this, "Success!");
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Customer.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new Home().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
