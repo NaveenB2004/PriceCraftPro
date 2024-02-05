@@ -18,7 +18,7 @@ public class DBConnection {
 
     private static final String DB = "Database.db";
 
-    public static Connection con() {
+    public static final Connection CONN() {
         Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:sqlite:" + DB);
@@ -121,7 +121,7 @@ public class DBConnection {
             };
 
             for (String queryX : query) {
-                try (Statement stmt = con().createStatement()) {
+                try (Statement stmt = CONN().createStatement()) {
                     stmt.execute(queryX);
                 } catch (SQLException ex) {
                     Logger.getLogger(DBConnection.class.getName())
