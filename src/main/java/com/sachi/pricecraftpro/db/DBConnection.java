@@ -14,17 +14,17 @@ public class DBConnection {
 
     private static final String DB = "Database.db";
 
-    public static final Connection CONN() {
-        Connection con = null;
+    public final Connection CONN() {
+        Connection conn = null;
         try {
-            con = DriverManager.getConnection("jdbc:sqlite:" + DB);
-            Statement stmt = con.createStatement();
+            conn = DriverManager.getConnection("jdbc:sqlite:" + DB);
+            Statement stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
         } catch (SQLException e) {
             Logger.getLogger(DBConnection.class.getName())
                     .log(Level.SEVERE, null, e);
         }
-        return con;
+        return conn;
     }
 
     public static void checkDb() {
@@ -101,28 +101,24 @@ public class DBConnection {
                 + "ON DELETE CASCADE"
                 + ");",
                 //
-                // add account types
-                "INSERT INTO type VALUES "
-                + "(1, 'seller', 'Manage materials'),"
-                + "(2, 'qs', 'Make estimates');",
-                //
-                // add accounts
-                "INSERT INTO login VALUES "
-                + "(1, 'Seller X', 'seller', 'seller', '0', 'seller@example.com',"
-                + " 'password', 1),"
-                + "(2, 'QS X', 'qs', 'qs', '0', 'qs@example.com', 'password', 2);",
-                //
                 // turn on foreign keys
                 "PRAGMA foreign_keys = ON"
             };
 
+            Connection conn = new DBConnection().CONN();
             for (String queryX : query) {
-                try (Statement stmt = CONN().createStatement()) {
+                try (Statement stmt = conn.createStatement()) {
                     stmt.execute(queryX);
                 } catch (SQLException ex) {
                     Logger.getLogger(DBConnection.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
+            }
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBConnection.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
     }
