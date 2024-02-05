@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package com.naveenb2004.pricecraftpro.ui;
+package com.sachi.pricecraftpro.ui;
 
-/**
- *
- * @author NaveenB2004
- */
 public class About extends javax.swing.JFrame {
 
     /**

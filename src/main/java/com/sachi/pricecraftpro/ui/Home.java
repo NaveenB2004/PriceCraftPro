@@ -1,9 +1,5 @@
-package com.naveenb2004.pricecraftpro.ui;
+package com.sachi.pricecraftpro.ui;
 
-/**
- *
- * @author NaveenB2004
- */
 public class Home extends javax.swing.JFrame {
 
     /**

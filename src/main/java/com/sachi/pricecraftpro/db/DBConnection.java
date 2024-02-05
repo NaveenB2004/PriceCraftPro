@@ -1,4 +1,4 @@
-package com.naveenb2004.pricecraftpro.db;
+package com.sachi.pricecraftpro.db;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,10 +10,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author NaveenB2004
- */
 public class DBConnection {
 
     private static final String DB = "Database.db";

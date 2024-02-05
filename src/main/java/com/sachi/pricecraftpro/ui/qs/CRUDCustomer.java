@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package com.naveenb2004.pricecraftpro.ui.qs;
+package com.sachi.pricecraftpro.ui.qs;
 
-/**
- *
- * @author NaveenB2004
- */
 public class CRUDCustomer extends javax.swing.JFrame {
 
     /**

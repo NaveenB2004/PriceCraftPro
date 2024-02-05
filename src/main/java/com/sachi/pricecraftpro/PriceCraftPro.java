@@ -1,13 +1,9 @@
-package com.naveenb2004.pricecraftpro;
+package com.sachi.pricecraftpro;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.naveenb2004.pricecraftpro.db.DBConnection;
-import com.naveenb2004.pricecraftpro.ui.Home;
+import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.ui.Home;
 
-/**
- *
- * @author NaveenB2004
- */
 public class PriceCraftPro {
 
     public static void main(String[] args) {

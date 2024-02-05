@@ -1,11 +1,7 @@
-package com.naveenb2004.pricecraftpro.ui;
+package com.sachi.pricecraftpro.ui;
 
-import com.naveenb2004.pricecraftpro.validation.Validation;
+import com.sachi.pricecraftpro.validation.Validation;
 
-/**
- *
- * @author NaveenB2004
- */
 public class LogIn extends javax.swing.JFrame {
 
     /**
