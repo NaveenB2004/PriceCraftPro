@@ -3,7 +3,6 @@ package com.sachi.pricecraftpro.ui;
 import com.sachi.pricecraftpro.db.DBConnection;
 import com.sachi.pricecraftpro.ui.qs.CRUDCustomer;
 import com.sachi.pricecraftpro.ui.seller.CRUDItem;
-import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -152,8 +151,10 @@ public class LogIn extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
+
+        Loading loading = new Loading();
+
         new Thread(() -> {
-            Loading loading = new Loading();
             loading.setVisible(true);
 
             if (validateLogin(jComboBox1.getSelectedIndex(),

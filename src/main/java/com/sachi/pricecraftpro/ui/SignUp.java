@@ -175,8 +175,9 @@ public class SignUp extends javax.swing.JFrame {
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
 
+        Loading loading = new Loading();
+
         new Thread(() -> {
-            Loading loading = new Loading();
             loading.setVisible(true);
 
             if (validateFields()) {
@@ -200,7 +201,7 @@ public class SignUp extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
                                     + "Go back to Login.");
                         } else {
-                            JOptionPane.showMessageDialog(this, 
+                            JOptionPane.showMessageDialog(this,
                                     "Username already exists! Try again!");
                         }
                     }
