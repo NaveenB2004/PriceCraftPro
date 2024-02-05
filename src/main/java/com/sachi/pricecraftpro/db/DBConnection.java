@@ -82,6 +82,7 @@ public class DBConnection {
                 + "id INTEGER NOT NULL,"
                 + "customer INTEGER NOT NULL,"
                 + "material INTEGER NOT NULL,"
+                + "units INTEGER NOT NULL,"
                 + "plan INTEGER NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (customer) REFERENCES customer(id) "
