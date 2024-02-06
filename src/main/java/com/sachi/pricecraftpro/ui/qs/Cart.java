@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class Cart extends javax.swing.JFrame {
@@ -26,19 +27,19 @@ public class Cart extends javax.swing.JFrame {
         initComponents();
         startup();
     }
-    
+
     public static String id = null;
     Connection conn;
     JMenuItem[] item = null;
     int i = 0;
-    
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
             panelOperations(false);
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -54,10 +55,10 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
             model.setRowCount(0);
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -80,13 +81,13 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             addMenuItems();
-            
+
             l.dispose();
         }).start();
     }
-    
+
     private void addMenuItems() {
         try {
             openConn();
@@ -119,7 +120,7 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }
-    
+
     private void panelOperations(boolean option) {
         for (Component com : jPanel1.getComponents()) {
             com.setEnabled(option);
@@ -127,7 +128,7 @@ public class Cart extends javax.swing.JFrame {
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
     }
-    
+
     private void menuItemOperations() {
         for (int j = 0; j <= i; j++) {
             if (item[j].isSelected()) {
@@ -135,7 +136,7 @@ public class Cart extends javax.swing.JFrame {
                 new Thread(() -> {
                     Loading l = new Loading();
                     l.setVisible(true);
-                    
+
                     jLabel4.setText(itemName);
                     DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                     model.setRowCount(0);
@@ -170,20 +171,20 @@ public class Cart extends javax.swing.JFrame {
                     } finally {
                         closeConn();
                     }
-                    
+
                     panelOperations(true);
-                    
+
                     l.dispose();
                 }).start();
                 break;
             }
         }
     }
-    
+
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-    
+
     private void closeConn() {
         if (conn != null) {
             try {
@@ -194,15 +195,15 @@ public class Cart extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private synchronized void detailsWritterX() {
         jProgressBar1.setIndeterminate(true);
-        
+
         String details;
         // basic details
         details = "QS Name : \t" + LogIn.name + "\n";
         details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         int subTotal = 0;
         for (int k = 1; k <= jComboBox1.getItemCount(); k++) {
@@ -220,12 +221,12 @@ public class Cart extends javax.swing.JFrame {
             subTotal += categoryTotal;
         }
         details += "[Sub Total : " + subTotal + "]";
-        
+
         jTextArea1.setText(details);
-        
+
         jProgressBar1.setIndeterminate(false);
     }
-    
+
     private void detailsWritter() {
         new Thread(() -> {
             detailsWritterX();
@@ -306,6 +307,11 @@ public class Cart extends javax.swing.JFrame {
         jLabel1.setText("Material Type : ");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("+");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -347,6 +353,11 @@ public class Cart extends javax.swing.JFrame {
         jLabel2.setText("Material Type : ");
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Material Name : ");
 
@@ -613,10 +624,10 @@ public class Cart extends javax.swing.JFrame {
         Loading l = new Loading();
         l.setVisible(true);
         panelOperations(false);
-        
+
         new Thread(() -> {
             EmailSender email = new EmailSender();
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -632,7 +643,7 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -649,15 +660,15 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             email.setSubject("Building estimate - " + jLabel4.getText());
             email.setBody(jTextArea1.getText());
             boolean status = email.sendMail();
-            
+
             l.dispose();
-            
+
             JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
-            
+
             panelOperations(true);
         }).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -678,16 +689,16 @@ public class Cart extends javax.swing.JFrame {
                             + "SET plan = '" + name + "' "
                             + "WHERE plan = '" + jLabel4.getText() + "' "
                             + "AND customer = '" + id + "'");
-                    
+
                     for (int j = 0; j <= i; j++) {
                         if (item[j].getText().equals(jLabel4.getText())) {
                             item[j].setText(name);
                             break;
                         }
                     }
-                    
+
                     jLabel4.setText(name);
-                    
+
                     JOptionPane.showMessageDialog(this,
                             "Success!");
                 } else {
@@ -704,6 +715,11 @@ public class Cart extends javax.swing.JFrame {
         detailsWritter();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void filter(String variable, JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+    }
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         detailsWritter();
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -713,7 +729,7 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-
+        filter(jTextField1.getText(), jTable2);
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -734,10 +750,10 @@ public class Cart extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
             panelOperations(false);
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
             for (int j = 0; j < model.getRowCount(); j++) {
                 try {
@@ -773,12 +789,20 @@ public class Cart extends javax.swing.JFrame {
                 } finally {
                     closeConn();
                 }
-                
+
                 l.dispose();
                 panelOperations(true);
             }
         }).start();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        filter(jComboBox1.getSelectedItem().toString(), jTable2);
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        filter(jComboBox2.getSelectedItem().toString(), jTable3);
+    }//GEN-LAST:event_jComboBox2ActionPerformed
 
     /**
      * @param args the command line arguments
