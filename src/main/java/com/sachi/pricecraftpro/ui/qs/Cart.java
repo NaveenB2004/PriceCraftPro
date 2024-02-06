@@ -129,6 +129,9 @@ public class Cart extends javax.swing.JFrame {
         }
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
+
+        jButton4.setEnabled(false);
+        jButton5.setEnabled(false);
     }
 
     private void menuItemOperations() {
@@ -297,6 +300,11 @@ public class Cart extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
         if (jTable2.getColumnModel().getColumnCount() > 0) {
             jTable2.getColumnModel().getColumn(0).setMinWidth(40);
@@ -341,6 +349,11 @@ public class Cart extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(jTable3);
@@ -763,11 +776,49 @@ public class Cart extends javax.swing.JFrame {
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
-        detailsWritter();
+        DefaultTableModel model0 = (DefaultTableModel) jTable2.getModel();
+        DefaultTableModel model1 = (DefaultTableModel) jTable3.getModel();
+
+        for (int j = 0; j < model1.getRowCount(); j++) {
+            if (model0.getValueAt(jTable2.getSelectedRow(), 0)
+                    .equals(model1.getValueAt(j, 0))) {
+                JOptionPane.showMessageDialog(this, "Item already added!");
+                return;
+            }
+        }
+
+        String units = JOptionPane.showInputDialog(this, "Enter units : ", "Units");
+
+        try {
+            if (Integer.parseInt(units) > 0) {
+                Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
+                    model0.getValueAt(jTable2.getSelectedRow(), 1),
+                    units,
+                    Integer.parseInt(model0.getValueAt(jTable2.getSelectedRow(), 2)
+                    .toString()) * Integer.parseInt(units),
+                    model0.getValueAt(jTable2.getSelectedRow(), 3)};
+
+                model1.addRow(row);
+
+                jTable2.clearSelection();
+                jButton4.setEnabled(false);
+
+                detailsWritter();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid value!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid value!");
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        model.removeRow(jTable3.getSelectedRow());
+
+        jTable3.clearSelection();
+        jButton5.setEnabled(false);
+
         detailsWritter();
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -846,6 +897,18 @@ public class Cart extends javax.swing.JFrame {
             jTextField1.setText("");
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        jButton4.setEnabled(true);
+        jButton5.setEnabled(false);
+        jTable3.clearSelection();
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        jButton4.setEnabled(false);
+        jButton5.setEnabled(true);
+        jTable2.clearSelection();
+    }//GEN-LAST:event_jTable3MouseClicked
 
     /**
      * @param args the command line arguments
