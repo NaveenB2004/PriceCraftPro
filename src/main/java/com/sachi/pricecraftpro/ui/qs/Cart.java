@@ -24,7 +24,8 @@ public class Cart extends javax.swing.JFrame {
      */
     public Cart() {
         initComponents();
-        startup();
+        setExtendedState(this.MAXIMIZED_BOTH);
+//        startup();
     }
 
     public static String id = null;
@@ -276,10 +277,15 @@ public class Cart extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cart");
-        setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Estimate Editor : "));
 
@@ -543,11 +549,17 @@ public class Cart extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Exit");
-        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logout_FILL0_wght200_GRAD0_opsz20.png"))); // NOI18N
+        jMenuItem3.setText("Exit");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu4ActionPerformed(evt);
+                jMenuItem3ActionPerformed(evt);
             }
         });
+        jMenu4.add(jMenuItem3);
+
         jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
@@ -612,18 +624,6 @@ public class Cart extends javax.swing.JFrame {
         }
         detailsWritter();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
-        if (unsaved) {
-            int reply = JOptionPane.showConfirmDialog(this, "You have unsaved works. Save now?",
-                    "Save", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION) {
-                jButton3ActionPerformed(evt);
-            }
-            new Customer().setVisible(true);
-            this.dispose();
-        }
-    }//GEN-LAST:event_jMenu4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         Loading l = new Loading();
@@ -856,6 +856,10 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        saveOperation();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void saveOperation() {
         Loading l = new Loading();
         l.setVisible(true);
 
@@ -902,7 +906,7 @@ public class Cart extends javax.swing.JFrame {
                 panelOperations(true);
             }
         }).start();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (jComboBox1.getSelectedItem() != null) {
@@ -922,6 +926,27 @@ public class Cart extends javax.swing.JFrame {
         jButton5.setEnabled(true);
         jTable2.clearSelection();
     }//GEN-LAST:event_jTable3MouseClicked
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        System.out.println("called!");
+        checkUnsaved();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        checkUnsaved();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void checkUnsaved() {
+        if (unsaved) {
+            int reply = JOptionPane.showConfirmDialog(this, "You have unsaved works. Save now?",
+                    "Save", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                saveOperation();
+            }
+        }
+        new Customer().setVisible(true);
+        this.dispose();
+    }
 
     /**
      * @param args the command line arguments
@@ -977,6 +1002,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
