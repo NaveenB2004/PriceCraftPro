@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class Cart extends javax.swing.JFrame {
 
     /**
-     * Creates new form CRUDCart
+     * Creates new form Cart
      */
     public Cart() {
         initComponents();
@@ -30,7 +30,7 @@ public class Cart extends javax.swing.JFrame {
     public static String id = null;
     Connection conn;
     JMenuItem[] item = null;
-    static int i = 0;
+    int i = 0;
 
     private void startup() {
         Loading l = new Loading();
@@ -195,6 +195,43 @@ public class Cart extends javax.swing.JFrame {
         }
     }
 
+    private synchronized void detailsWritterX() {
+        jProgressBar1.setIndeterminate(true);
+
+        String details;
+        // basic details
+        details = "QS Name : \t" + LogIn.name + "\n";
+        details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
+
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        int subTotal = 0;
+        for (int k = 1; k <= jComboBox1.getItemCount(); k++) {
+            details += jComboBox1.getItemAt(k) + " : \n";
+            int categoryTotal = 0;
+            for (int j = 0; j < model.getRowCount(); j++) {
+                if (model.getValueAt(j, 4).equals(jComboBox1.getItemAt(k))) {
+                    details += "|- " + model.getValueAt(j, 1) + "\t["
+                            + model.getValueAt(j, 2)
+                            + "]\t" + model.getValueAt(j, 3) + "\n";
+                    categoryTotal += Integer.parseInt((String) model.getValueAt(j, 3));
+                }
+            }
+            details += "[Total : " + categoryTotal + "]\n\n";
+            subTotal += categoryTotal;
+        }
+        details += "[Sub Total : " + subTotal + "]";
+
+        jTextArea1.setText(details);
+
+        jProgressBar1.setIndeterminate(false);
+    }
+
+    private void detailsWritter() {
+        new Thread(() -> {
+            detailsWritterX();
+        }).start();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -221,6 +258,7 @@ public class Cart extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -270,8 +308,18 @@ public class Cart extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
 
         jButton4.setText("+");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("-");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -301,6 +349,12 @@ public class Cart extends javax.swing.JFrame {
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
 
         jLabel5.setText("Material Name : ");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Edit item");
 
@@ -384,7 +438,9 @@ public class Cart extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -392,6 +448,8 @@ public class Cart extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -611,7 +669,20 @@ public class Cart extends javax.swing.JFrame {
         } finally {
             closeConn();
         }
+        detailsWritter();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        detailsWritter();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        detailsWritter();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -672,6 +743,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

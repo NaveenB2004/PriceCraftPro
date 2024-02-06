@@ -1,15 +1,12 @@
 package com.sachi.pricecraftpro.ui;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
-import com.sachi.pricecraftpro.ui.qs.Customer;
-import com.sachi.pricecraftpro.ui.seller.Item;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 public class LogIn extends javax.swing.JFrame {
 
@@ -22,6 +19,7 @@ public class LogIn extends javax.swing.JFrame {
 
     Connection conn = null;
     public static int id = 0;
+    public static String name = "";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -115,7 +113,6 @@ public class LogIn extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_jLabel2MouseClicked
 
@@ -126,7 +123,7 @@ public class LogIn extends javax.swing.JFrame {
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(id), id "
+                ResultSet rs = stmt.executeQuery("SELECT COUNT(id), id, name "
                         + "FROM login "
                         + "WHERE type = '" + type + "' AND "
                         + "username = '" + username + "' AND "
@@ -134,6 +131,7 @@ public class LogIn extends javax.swing.JFrame {
                 while (rs.next()) {
                     if (rs.getInt(1) != 0) {
                         id = rs.getInt(2);
+                        name = rs.getString(3);
                         return true;
                     }
                 }
