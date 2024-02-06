@@ -24,6 +24,7 @@ public class Loading extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Please wait");
+        setAlwaysOnTop(true);
         setUndecorated(true);
         setResizable(false);
 

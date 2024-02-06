@@ -1,7 +1,9 @@
 package com.sachi.pricecraftpro.ui.qs;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
+import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Loading;
+import com.sachi.pricecraftpro.ui.LogIn;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
@@ -12,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Cart extends javax.swing.JFrame {
@@ -23,19 +26,19 @@ public class Cart extends javax.swing.JFrame {
         initComponents();
         startup();
     }
-    
+
     public static String id = null;
     Connection conn;
     JMenuItem[] item = null;
     static int i = 0;
-    
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
             panelOperations(false);
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -51,10 +54,10 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
             model.setRowCount(0);
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -77,13 +80,13 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             addMenuItems();
-            
+
             l.dispose();
         }).start();
     }
-    
+
     private void addMenuItems() {
         try {
             openConn();
@@ -116,7 +119,7 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }
-    
+
     private void panelOperations(boolean option) {
         for (Component com : jPanel1.getComponents()) {
             com.setEnabled(option);
@@ -124,7 +127,7 @@ public class Cart extends javax.swing.JFrame {
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
     }
-    
+
     private void menuItemOperations() {
         for (int j = 0; j <= i; j++) {
             if (item[j].isSelected()) {
@@ -132,7 +135,7 @@ public class Cart extends javax.swing.JFrame {
                 new Thread(() -> {
                     Loading l = new Loading();
                     l.setVisible(true);
-                    
+
                     jLabel4.setText(itemName);
                     DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                     model.setRowCount(0);
@@ -167,20 +170,20 @@ public class Cart extends javax.swing.JFrame {
                     } finally {
                         closeConn();
                     }
-                    
+
                     panelOperations(true);
-                    
+
                     l.dispose();
                 }).start();
                 break;
             }
         }
     }
-    
+
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-    
+
     private void closeConn() {
         if (conn != null) {
             try {
@@ -449,6 +452,11 @@ public class Cart extends javax.swing.JFrame {
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mail_FILL0_wght200_GRAD0_opsz20.png"))); // NOI18N
         jMenuItem2.setText("Email to customer");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
@@ -506,6 +514,59 @@ public class Cart extends javax.swing.JFrame {
         new Customer().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenu4ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Loading l = new Loading();
+        l.setVisible(true);
+        panelOperations(false);
+
+        new Thread(() -> {
+            EmailSender email = new EmailSender();
+
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT email "
+                        + "FROM customer "
+                        + "WHERE id = '" + id + "'");
+                while (rs.next()) {
+                    email.setTo(rs.getString(1));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT email, key "
+                        + "FROM login "
+                        + "WHERE id = '" + LogIn.id + "'");
+                while (rs.next()) {
+                    email.setFrom(rs.getString(1));
+                    email.setKey(rs.getString(2));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+
+            email.setSubject("Building estimate - " + jLabel4.getText());
+            email.setBody(jTextArea1.getText());
+            boolean status = email.sendMail();
+
+            l.dispose();
+
+            JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
+            
+            panelOperations(true);
+        }).start();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments

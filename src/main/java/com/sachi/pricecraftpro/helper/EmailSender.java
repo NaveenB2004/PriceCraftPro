@@ -15,25 +15,34 @@ import java.util.logging.Logger;
 public class EmailSender {
 
     // Recipient's email ID needs to be mentioned.
-    String to;
+    private String to;
     // Sender's email ID needs to be mentioned
-    String from;
+    private String from;
 
-    String username;//change accordingly
-    String password;//change accordingly
+    private String username;//change accordingly
+    private String password;//change accordingly
 
-    String subject;
-    String body;
-
-    public EmailSender(String from,
-            String to,
-            String password,
-            String subject,
-            String body) {
+    private String subject;
+    private String body;
+    
+    public void setTo(String to) {
+        this.to = to;
+    }
+    
+    public void setFrom(String from) {
         this.from = from;
         this.username = from;
-        this.to = to;
+    }
+    
+    public void setKey(String key) {
+        this.password = key;
+    }
+    
+    public void setSubject(String subject) {
         this.subject = subject;
+    }
+    
+    public void setBody(String body) {
         this.body = body;
     }
 
