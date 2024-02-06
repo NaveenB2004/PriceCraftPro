@@ -1,6 +1,6 @@
 package com.sachi.pricecraftpro.ui.qs;
 
-import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;

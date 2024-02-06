@@ -1,6 +1,6 @@
 package com.sachi.pricecraftpro.ui;
 
-import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.qs.Customer;
 import com.sachi.pricecraftpro.ui.seller.Item;
 import java.sql.Connection;

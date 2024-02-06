@@ -1,6 +1,6 @@
 package com.sachi.pricecraftpro.ui;
 
-import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.helper.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

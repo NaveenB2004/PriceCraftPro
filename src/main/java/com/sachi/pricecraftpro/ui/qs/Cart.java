@@ -1,6 +1,6 @@
 package com.sachi.pricecraftpro.ui.qs;
 
-import com.sachi.pricecraftpro.db.DBConnection;
+import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.Loading;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -22,21 +21,23 @@ public class Cart extends javax.swing.JFrame {
      */
     public Cart() {
         initComponents();
-//        startup();
+        startup();
     }
-
+    
     public static String id = null;
     Connection conn;
-
+    JMenuItem[] item = null;
+    static int i = 0;
+    
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-
+        
         new Thread(() -> {
             panelOperations(false);
             
             try {
-                conn = new DBConnection().CONN();
+                openConn();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT name "
                         + "FROM category");
@@ -48,18 +49,17 @@ public class Cart extends javax.swing.JFrame {
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
-                connectionClose();
+                closeConn();
             }
             
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
             model.setRowCount(0);
             
             try {
-                conn = new DBConnection().CONN();
+                openConn();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * "
-                        + "FROM material "
-                        + "ORDER BY category");
+                        + "FROM material");
                 while (rs.next()) {
                     Statement stmt0 = conn.createStatement();
                     ResultSet rs0 = stmt0.executeQuery("SELECT name "
@@ -75,19 +75,18 @@ public class Cart extends javax.swing.JFrame {
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
-                connectionClose();
+                closeConn();
             }
-
+            
             addMenuItems();
-
+            
             l.dispose();
         }).start();
     }
-
+    
     private void addMenuItems() {
-        JMenuItem[] item = null;
         try {
-            conn = new DBConnection().CONN();
+            openConn();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT DISTINCT COUNT(plan) "
                     + "FROM cart "
@@ -98,13 +97,13 @@ public class Cart extends javax.swing.JFrame {
                 ResultSet rs0 = stmt0.executeQuery("SELECT DISTINCT plan "
                         + "FROM cart "
                         + "WHERE customer = '" + id + "'");
-                int i = 0;
+                i = 0;
                 while (rs0.next()) {
                     item[i].setIcon(new ImageIcon(getClass()
                             .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
                     item[i].setText(rs0.getString(1));
                     item[i].addActionListener((ActionEvent evt) -> {
-                       menuItemOperations();
+                        menuItemOperations();
                     });
                     jMenu3.add(item[i]);
                     i++;
@@ -114,10 +113,10 @@ public class Cart extends javax.swing.JFrame {
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
-            connectionClose();
+            closeConn();
         }
     }
-
+    
     private void panelOperations(boolean option) {
         for (Component com : jPanel1.getComponents()) {
             com.setEnabled(option);
@@ -125,12 +124,64 @@ public class Cart extends javax.swing.JFrame {
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
     }
-
+    
     private void menuItemOperations() {
-        System.out.println(Arrays.toString(jMenu3.getSelectedObjects()));
+        for (int j = 0; j <= i; j++) {
+            if (item[j].isSelected()) {
+                String itemName = item[j].getText();
+                new Thread(() -> {
+                    Loading l = new Loading();
+                    l.setVisible(true);
+                    
+                    jLabel4.setText(itemName);
+                    DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+                    model.setRowCount(0);
+                    try {
+                        openConn();
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT material, units "
+                                + "FROM cart "
+                                + "WHERE customer = '" + id + "' "
+                                + "AND plan = '" + itemName + "'");
+                        while (rs.next()) {
+                            Statement stmt0 = conn.createStatement();
+                            ResultSet rs0 = stmt0.executeQuery("SELECT id, name, price, category "
+                                    + "FROM material "
+                                    + "WHERE id = '" + rs.getString(1) + "'");
+                            while (rs0.next()) {
+                                Statement stmt1 = conn.createStatement();
+                                ResultSet rs1 = stmt1.executeQuery("SELECT name "
+                                        + "FROM category "
+                                        + "WHERE id = '" + rs0.getString(4) + "'");
+                                while (rs1.next()) {
+                                    Object[] row = {rs0.getString(1), rs0.getString(2),
+                                        rs.getString(2), rs.getInt(2) * rs0.getInt(3),
+                                        rs1.getString(1)};
+                                    model.addRow(row);
+                                }
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Cart.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    } finally {
+                        closeConn();
+                    }
+                    
+                    panelOperations(true);
+                    
+                    l.dispose();
+                }).start();
+                break;
+            }
+        }
     }
     
-    private void connectionClose() {
+    private void openConn() {
+        conn = new DBConnection().CONN();
+    }
+    
+    private void closeConn() {
         if (conn != null) {
             try {
                 conn.close();
@@ -222,10 +273,7 @@ public class Cart extends javax.swing.JFrame {
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Name", "Units", "Price", "Type"
@@ -274,8 +322,8 @@ public class Cart extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -383,11 +431,6 @@ public class Cart extends javax.swing.JFrame {
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_open_FILL0_wght100_GRAD200_opsz48.png"))); // NOI18N
         jMenu3.setText("Open Estimate");
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
         jMenu1.add(jMenu3);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -463,10 +506,6 @@ public class Cart extends javax.swing.JFrame {
         new Customer().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenu4ActionPerformed
-
-    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
-        menuItemOperations();
-    }//GEN-LAST:event_jMenu3ActionPerformed
 
     /**
      * @param args the command line arguments
