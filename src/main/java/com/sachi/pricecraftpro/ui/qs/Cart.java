@@ -26,19 +26,19 @@ public class Cart extends javax.swing.JFrame {
         initComponents();
         startup();
     }
-
+    
     public static String id = null;
     Connection conn;
     JMenuItem[] item = null;
     int i = 0;
-
+    
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-
+        
         new Thread(() -> {
             panelOperations(false);
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -54,10 +54,10 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
             model.setRowCount(0);
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -80,13 +80,13 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             addMenuItems();
-
+            
             l.dispose();
         }).start();
     }
-
+    
     private void addMenuItems() {
         try {
             openConn();
@@ -119,7 +119,7 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }
-
+    
     private void panelOperations(boolean option) {
         for (Component com : jPanel1.getComponents()) {
             com.setEnabled(option);
@@ -127,7 +127,7 @@ public class Cart extends javax.swing.JFrame {
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
     }
-
+    
     private void menuItemOperations() {
         for (int j = 0; j <= i; j++) {
             if (item[j].isSelected()) {
@@ -135,7 +135,7 @@ public class Cart extends javax.swing.JFrame {
                 new Thread(() -> {
                     Loading l = new Loading();
                     l.setVisible(true);
-
+                    
                     jLabel4.setText(itemName);
                     DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                     model.setRowCount(0);
@@ -170,20 +170,20 @@ public class Cart extends javax.swing.JFrame {
                     } finally {
                         closeConn();
                     }
-
+                    
                     panelOperations(true);
-
+                    
                     l.dispose();
                 }).start();
                 break;
             }
         }
     }
-
+    
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-
+    
     private void closeConn() {
         if (conn != null) {
             try {
@@ -194,15 +194,15 @@ public class Cart extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private synchronized void detailsWritterX() {
         jProgressBar1.setIndeterminate(true);
-
+        
         String details;
         // basic details
         details = "QS Name : \t" + LogIn.name + "\n";
         details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
-
+        
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         int subTotal = 0;
         for (int k = 1; k <= jComboBox1.getItemCount(); k++) {
@@ -220,12 +220,12 @@ public class Cart extends javax.swing.JFrame {
             subTotal += categoryTotal;
         }
         details += "[Sub Total : " + subTotal + "]";
-
+        
         jTextArea1.setText(details);
-
+        
         jProgressBar1.setIndeterminate(false);
     }
-
+    
     private void detailsWritter() {
         new Thread(() -> {
             detailsWritterX();
@@ -356,7 +356,12 @@ public class Cart extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Edit item");
+        jButton2.setText("Edit units");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -491,6 +496,11 @@ public class Cart extends javax.swing.JFrame {
         );
 
         jButton3.setText("Save");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -569,7 +579,29 @@ public class Cart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        String name = JOptionPane.showInputDialog(this, "Enter name : ", "Estimate");
+        try {
+            openConn();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                    + "FROM cart "
+                    + "WHERE plan = '" + name + "' "
+                    + "AND customer = '" + id + "'");
+            while (rs.next()) {
+                if (rs.getInt(1) != 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Name already in use. Please use another.");
+                } else {
+                    panelOperations(true);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Cart.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            closeConn();
+        }
+        detailsWritter();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
@@ -581,10 +613,10 @@ public class Cart extends javax.swing.JFrame {
         Loading l = new Loading();
         l.setVisible(true);
         panelOperations(false);
-
+        
         new Thread(() -> {
             EmailSender email = new EmailSender();
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -600,7 +632,7 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -617,15 +649,15 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             email.setSubject("Building estimate - " + jLabel4.getText());
             email.setBody(jTextArea1.getText());
             boolean status = email.sendMail();
-
+            
             l.dispose();
-
+            
             JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
-
+            
             panelOperations(true);
         }).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -646,16 +678,16 @@ public class Cart extends javax.swing.JFrame {
                             + "SET plan = '" + name + "' "
                             + "WHERE plan = '" + jLabel4.getText() + "' "
                             + "AND customer = '" + id + "'");
-
+                    
                     for (int j = 0; j <= i; j++) {
                         if (item[j].getText().equals(jLabel4.getText())) {
                             item[j].setText(name);
                             break;
                         }
                     }
-
+                    
                     jLabel4.setText(name);
-
+                    
                     JOptionPane.showMessageDialog(this,
                             "Success!");
                 } else {
@@ -683,6 +715,70 @@ public class Cart extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
 
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String units = JOptionPane.showInputDialog(this, "Enter new value : ", "Units");
+        try {
+            if (Integer.parseInt(units) > 0) {
+                DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+                model.setValueAt(units, jTable3.getSelectedRow(), 2);
+                detailsWritter();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid value!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid value!");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Loading l = new Loading();
+        l.setVisible(true);
+        
+        new Thread(() -> {
+            panelOperations(false);
+            
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            for (int j = 0; j < model.getRowCount(); j++) {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                            + "FROM cart "
+                            + "WHERE plan = '" + jLabel4.getText() + "'");
+                    while (rs.next()) {
+                        Statement stmt0 = conn.createStatement();
+                        ResultSet rs0 = stmt0.executeQuery("SELECT id "
+                                + "FROM material "
+                                + "WHERE name = '" + model.getValueAt(j, 4) + "'");
+                        while (rs0.next()) {
+                            if (rs.getInt(1) != 0) {
+                                Statement stmt1 = conn.createStatement();
+                                stmt1.executeUpdate("DELETE FROM cart "
+                                        + "WHERE plan = '" + jLabel4.getText() + "'");
+                            }
+                            Statement stmt2 = conn.createStatement();
+                            stmt2.executeUpdate("INSERT INTO cart "
+                                    + "(customer, material, units, plan) "
+                                    + "VALUES "
+                                    + "('" + id + "', '" + rs0.getString(1) + "', "
+                                    + "'" + model.getValueAt(j, 2) + "', "
+                                    + "'" + jLabel4.getText() + "')");
+                            JOptionPane.showMessageDialog(this, "Success!");
+                        }
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+                
+                l.dispose();
+                panelOperations(true);
+            }
+        }).start();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
