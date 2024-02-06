@@ -31,6 +31,7 @@ public class Cart extends javax.swing.JFrame {
     Connection conn;
     JMenuItem[] item = null;
     int i = 0;
+    boolean unsaved = false;
 
     private void startup() {
         Loading l = new Loading();
@@ -276,8 +277,9 @@ public class Cart extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cart");
+        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Estimate Editor : "));
 
@@ -612,8 +614,15 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
-        new Customer().setVisible(true);
-        this.dispose();
+        if (unsaved) {
+            int reply = JOptionPane.showConfirmDialog(this, "You have unsaved works. Save now?",
+                    "Save", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                jButton3ActionPerformed(evt);
+            }
+            new Customer().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_jMenu4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -803,6 +812,8 @@ public class Cart extends javax.swing.JFrame {
                 jTable2.clearSelection();
                 jButton4.setEnabled(false);
 
+                unsaved = true;
+
                 detailsWritter();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
@@ -818,6 +829,8 @@ public class Cart extends javax.swing.JFrame {
 
         jTable3.clearSelection();
         jButton5.setEnabled(false);
+
+        unsaved = true;
 
         detailsWritter();
     }//GEN-LAST:event_jButton5ActionPerformed
