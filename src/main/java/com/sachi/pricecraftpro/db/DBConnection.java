@@ -52,7 +52,6 @@ public class DBConnection {
                 + "name TEXT NOT NULL,"
                 + "price REAL NOT NULL,"
                 + "category INTEGER NOT NULL,"
-                + "parent INTEGER NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (category) REFERENCES category(id) "
                 + "ON DELETE CASCADE"
