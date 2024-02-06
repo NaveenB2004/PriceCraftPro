@@ -82,7 +82,7 @@ public class DBConnection {
                 + "customer INTEGER NOT NULL,"
                 + "material INTEGER NOT NULL,"
                 + "units INTEGER NOT NULL,"
-                + "plan INTEGER NOT NULL,"
+                + "plan TEXT NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (customer) REFERENCES customer(id) "
                 + "ON DELETE CASCADE,"

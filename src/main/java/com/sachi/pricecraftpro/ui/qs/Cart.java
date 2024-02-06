@@ -204,7 +204,6 @@ public class Cart extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -403,6 +402,11 @@ public class Cart extends javax.swing.JFrame {
         jLabel4.setText("---");
 
         jButton1.setText("Edit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -563,10 +567,51 @@ public class Cart extends javax.swing.JFrame {
             l.dispose();
 
             JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
-            
+
             panelOperations(true);
         }).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String name = JOptionPane.showInputDialog(this, "Enter new name : ", "Estimate");
+        try {
+            openConn();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                    + "FROM cart "
+                    + "WHERE plan = '" + name + "' "
+                    + "AND customer = '" + id + "'");
+            while (rs.next()) {
+                if (rs.getInt(1) == 0) {
+                    Statement stmt0 = conn.createStatement();
+                    stmt0.executeUpdate("UPDATE cart "
+                            + "SET plan = '" + name + "' "
+                            + "WHERE plan = '" + jLabel4.getText() + "' "
+                            + "AND customer = '" + id + "'");
+
+                    for (int j = 0; j <= i; j++) {
+                        if (item[j].getText().equals(jLabel4.getText())) {
+                            item[j].setText(name);
+                            break;
+                        }
+                    }
+
+                    jLabel4.setText(name);
+
+                    JOptionPane.showMessageDialog(this,
+                            "Success!");
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Name already in use. Please use another.");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Cart.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            closeConn();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -627,7 +672,6 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
