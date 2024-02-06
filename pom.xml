@@ -24,16 +24,6 @@
             <artifactId>flatlaf</artifactId>
             <version>3.3</version>
         </dependency>
-        <dependency>
-            <groupId>unknown.binary</groupId>
-            <artifactId>KGradientPanel</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>unknown.binary</groupId>
-            <artifactId>KControls-2.0</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
     </dependencies>
     
     <build>

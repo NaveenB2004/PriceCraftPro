@@ -2,11 +2,13 @@ package com.sachi.pricecraftpro.ui.qs;
 
 import com.sachi.pricecraftpro.db.DBConnection;
 import com.sachi.pricecraftpro.ui.Loading;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -20,17 +22,19 @@ public class Cart extends javax.swing.JFrame {
      */
     public Cart() {
         initComponents();
-        startup();
+//        startup();
     }
-    
+
     public static String id = null;
     Connection conn;
-    
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
+            panelOperations(false);
+            
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
@@ -44,17 +48,12 @@ public class Cart extends javax.swing.JFrame {
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Cart.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    }
-                }
+                connectionClose();
             }
+            
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
             model.setRowCount(0);
+            
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
@@ -76,22 +75,15 @@ public class Cart extends javax.swing.JFrame {
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Cart.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    }
-                }
+                connectionClose();
             }
-            
+
             addMenuItems();
-            
+
             l.dispose();
         }).start();
     }
-    
+
     private void addMenuItems() {
         JMenuItem[] item = null;
         try {
@@ -112,7 +104,7 @@ public class Cart extends javax.swing.JFrame {
                             .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
                     item[i].setText(rs0.getString(1));
                     item[i].addActionListener((ActionEvent evt) -> {
-                        // todo code here!
+                       menuItemOperations();
                     });
                     jMenu3.add(item[i]);
                     i++;
@@ -122,13 +114,29 @@ public class Cart extends javax.swing.JFrame {
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                }
+            connectionClose();
+        }
+    }
+
+    private void panelOperations(boolean option) {
+        for (Component com : jPanel1.getComponents()) {
+            com.setEnabled(option);
+        }
+        jButton3.setEnabled(option);
+        jButton1.setEnabled(option);
+    }
+
+    private void menuItemOperations() {
+        System.out.println(Arrays.toString(jMenu3.getSelectedObjects()));
+    }
+    
+    private void connectionClose() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -375,6 +383,11 @@ public class Cart extends javax.swing.JFrame {
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_open_FILL0_wght100_GRAD200_opsz48.png"))); // NOI18N
         jMenu3.setText("Open Estimate");
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenu3);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -450,6 +463,10 @@ public class Cart extends javax.swing.JFrame {
         new Customer().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenu4ActionPerformed
+
+    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
+        menuItemOperations();
+    }//GEN-LAST:event_jMenu3ActionPerformed
 
     /**
      * @param args the command line arguments
