@@ -71,7 +71,7 @@ public class DBConnection {
                 + "qs INTEGER NOT NULL,"
                 + "name TEXT NOT NULL,"
                 + "email TEXT NOT NULL,"
-                + "count INTEGER NOT NULL"
+                + "count INTEGER NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (qs) REFERENCES login(id) ON DELETE CASCADE"
                 + ");",

@@ -25,7 +25,7 @@ public class Cart extends javax.swing.JFrame {
     public Cart() {
         initComponents();
         setExtendedState(this.MAXIMIZED_BOTH);
-//        startup();
+        startup();
     }
 
     public static String id = null;
