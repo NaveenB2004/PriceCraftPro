@@ -1,4 +1,4 @@
-package com.sachi.pricecraftpro.ui.qs;
+package com.sachi.pricecraftpro.ui.common;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.LogIn;
