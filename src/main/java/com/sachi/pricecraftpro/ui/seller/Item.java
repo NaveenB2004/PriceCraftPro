@@ -1,7 +1,18 @@
 package com.sachi.pricecraftpro.ui.seller;
 
+import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.Home;
+import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.common.Settings;
+import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Item extends javax.swing.JFrame {
 
@@ -10,6 +21,91 @@ public class Item extends javax.swing.JFrame {
      */
     public Item() {
         initComponents();
+        startup();
+    }
+
+    Connection conn;
+
+    private void startup() {
+        Loading l = new Loading();
+        l.setVisible(true);
+
+        new Thread(() -> {
+            ActionEvent evt = null;
+            jButton5ActionPerformed(evt);
+            jButton6ActionPerformed(evt);
+
+            jComboBox1.removeAllItems();
+            jComboBox2.removeAllItems();
+            jComboBox3.removeAllItems();
+
+            jComboBox1.addItem("Please Select");
+            jComboBox2.addItem("Please Select");
+            jComboBox3.addItem("All");
+
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT name "
+                        + "FROM category");
+                while (rs.next()) {
+                    jComboBox1.addItem(rs.getString(1));
+                    jComboBox2.addItem(rs.getString(1));
+                    jComboBox3.addItem(rs.getString(1));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Item.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+
+            fillTable();
+
+            l.dispose();
+        }).start();
+    }
+
+    private void fillTable() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        try {
+            openConn();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * "
+                    + "FROM material");
+            while (rs.next()) {
+                Statement stmt0 = conn.createStatement();
+                ResultSet rs0 = stmt0.executeQuery("SELECT name "
+                        + "FROM category "
+                        + "WHERE id = '" + rs.getString(4) + "'");
+                while (rs0.next()) {
+                    Object[] row = {rs.getString(1), rs.getString(2),
+                        rs.getString(3), rs0.getString(1)};
+                    model.addRow(row);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Item.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            closeConn();
+        }
+    }
+
+    private void openConn() {
+        conn = new DBConnection().CONN();
+    }
+
+    private void closeConn() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Item.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -38,8 +134,6 @@ public class Item extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
@@ -105,12 +199,27 @@ public class Item extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("Add");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("Update");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(jRadioButton3);
         jRadioButton3.setText("Delete");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Name : ");
 
@@ -119,8 +228,18 @@ public class Item extends javax.swing.JFrame {
         jLabel3.setText("Description : ");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Push");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Clear");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -128,10 +247,6 @@ public class Item extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-
-        jLabel10.setText("ID : ");
-
-        jLabel11.setText("---");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -151,10 +266,9 @@ public class Item extends javax.swing.JFrame {
                         .addComponent(jRadioButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRadioButton3)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 619, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -162,8 +276,7 @@ public class Item extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jTextField2))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -174,10 +287,6 @@ public class Item extends javax.swing.JFrame {
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2)
                     .addComponent(jRadioButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -244,6 +353,11 @@ public class Item extends javax.swing.JFrame {
         jLabel7.setText("Filter by Category : ");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", " " }));
+        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox3ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Clear");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -335,7 +449,7 @@ public class Item extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                         .addComponent(jButton7))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
@@ -358,7 +472,7 @@ public class Item extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -382,8 +496,7 @@ public class Item extends javax.swing.JFrame {
         jRadioButton1.setSelected(false);
         jRadioButton2.setSelected(false);
         jRadioButton3.setSelected(false);
-        
-        jLabel11.setText("---");
+
         jComboBox1.setSelectedIndex(0);
         jTextField1.setText("");
         jTextField2.setText("");
@@ -393,14 +506,152 @@ public class Item extends javax.swing.JFrame {
         jRadioButton4.setSelected(false);
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
-        
+
         jLabel9.setText("");
         jTextField3.setText("---");
         jTextField4.setText("");
         jComboBox2.setSelectedIndex(0);
-        
+
         jTable1.clearSelection();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        jButton5ActionPerformed(evt);
+        jRadioButton1.setSelected(true);
+        jComboBox1.setEnabled(false);
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        jButton5ActionPerformed(evt);
+        jRadioButton2.setSelected(true);
+        jComboBox1.setEnabled(true);
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        jButton5ActionPerformed(evt);
+        jRadioButton3.setSelected(true);
+        jComboBox1.setEnabled(true);
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (jRadioButton1.isSelected()) {
+            if (!jTextField1.getText().equals("")
+                    && !jTextField2.getText().equals("")) {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("INSERT INTO category "
+                            + "(name, description) VALUES "
+                            + "('" + jTextField1.getText() + "', "
+                            + "'" + jTextField2.getText() + "')");
+                    JOptionPane.showMessageDialog(this, "Success!");
+                    startup();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "All filed must be filled!");
+            }
+        }
+        if (jRadioButton2.isSelected()) {
+            if (!jTextField1.getText().equals("")
+                    && !jTextField2.getText().equals("")
+                    && jComboBox1.getSelectedIndex() != 0) {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("UPDATE category "
+                            + "SET name = '" + jTextField1.getText() + "', "
+                            + "description = '" + jTextField2.getText() + "' "
+                            + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
+                    JOptionPane.showMessageDialog(this, "Success!");
+                    startup();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid selection or empty field!");
+            }
+        }
+        if (jRadioButton3.isSelected()) {
+            if (jComboBox1.getSelectedIndex() != 0) {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("DELETE FROM category "
+                            + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
+                    JOptionPane.showMessageDialog(this, "Success!");
+                    startup();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Selection!");
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        if (jComboBox1.getSelectedItem() != null
+                && jComboBox1.getSelectedIndex() != 0) {
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT name, description "
+                        + "FROM category "
+                        + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
+                while (rs.next()) {
+                    jTextField1.setText(rs.getString(1));
+                    jTextField2.setText(rs.getString(2));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Item.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+        if (jComboBox3.getSelectedItem() != null) {
+            if (jComboBox3.getSelectedIndex() != 0) {
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.setRowCount(0);
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT id, name, price "
+                            + "FROM material "
+                            + "WHERE id = '" + jComboBox3.getSelectedIndex() + "'");
+                    while (rs.next()) {
+                        Object[] row = {rs.getString(1), rs.getString(2),
+                            rs.getString(3), jComboBox3.getSelectedItem()};
+                        model.addRow(row);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            } else {
+                fillTable();
+            }
+        }
+    }//GEN-LAST:event_jComboBox3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -452,8 +703,6 @@ public class Item extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
