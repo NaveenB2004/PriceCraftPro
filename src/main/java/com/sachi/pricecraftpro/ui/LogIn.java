@@ -20,6 +20,8 @@ public class LogIn extends javax.swing.JFrame {
      */
     public LogIn() {
         initComponents();
+        jButton1.putClientProperty("JButton.buttonType", "roundRect");
+        jButton2.putClientProperty("JButton.buttonType", "roundRect");
     }
 
     Connection conn = null;
@@ -175,6 +177,7 @@ public class LogIn extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(14, 21, 20));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Register");
         jButton2.setActionCommand("Register");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -324,6 +327,9 @@ public class LogIn extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+                new SignUp().setVisible(true);
+                this.dispose();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private boolean validateLogin(int type, String username, String password) {
