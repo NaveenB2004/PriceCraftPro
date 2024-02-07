@@ -50,6 +50,7 @@ public class Cart extends javax.swing.JFrame {
                     jComboBox1.addItem(rs.getString(1));
                 }
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
@@ -85,6 +86,7 @@ public class Cart extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -118,6 +120,7 @@ public class Cart extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -173,6 +176,7 @@ public class Cart extends javax.swing.JFrame {
                             }
                         }
                     } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Error!");
                         Logger.getLogger(Cart.class.getName())
                                 .log(Level.SEVERE, null, ex);
                     } finally {
@@ -617,6 +621,7 @@ public class Cart extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -643,6 +648,7 @@ public class Cart extends javax.swing.JFrame {
                     email.setTo(rs.getString(1));
                 }
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
@@ -660,6 +666,7 @@ public class Cart extends javax.swing.JFrame {
                     email.setKey(rs.getString(2));
                 }
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Cart.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
@@ -712,6 +719,7 @@ public class Cart extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Cart.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -747,6 +755,7 @@ public class Cart extends javax.swing.JFrame {
                         }
                     }
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Cart.class.getName())
                             .log(Level.SEVERE, null, ex);
                 } finally {
@@ -775,6 +784,7 @@ public class Cart extends javax.swing.JFrame {
                         }
                     }
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Cart.class.getName())
                             .log(Level.SEVERE, null, ex);
                 } finally {
@@ -896,6 +906,7 @@ public class Cart extends javax.swing.JFrame {
                         }
                     }
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Cart.class.getName())
                             .log(Level.SEVERE, null, ex);
                 } finally {

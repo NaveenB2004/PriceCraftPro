@@ -46,6 +46,7 @@ public class Customer extends javax.swing.JFrame {
                     model.addRow(row);
                 }
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Customer.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
@@ -73,6 +74,7 @@ public class Customer extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -133,12 +135,21 @@ public class Customer extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("Settings");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -146,7 +157,9 @@ public class Customer extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton7))
                 .addContainerGap())
         );
 
@@ -346,6 +359,7 @@ public class Customer extends javax.swing.JFrame {
             jButton6ActionPerformed(evt);
             JOptionPane.showMessageDialog(this, "Success!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Customer.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -370,6 +384,7 @@ public class Customer extends javax.swing.JFrame {
             jButton6ActionPerformed(evt);
             JOptionPane.showMessageDialog(this, "Success!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Customer.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -394,6 +409,7 @@ public class Customer extends javax.swing.JFrame {
             jButton6ActionPerformed(evt);
             JOptionPane.showMessageDialog(this, "Success!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error!");
             Logger.getLogger(Customer.class.getName())
                     .log(Level.SEVERE, null, ex);
         } finally {
@@ -410,6 +426,10 @@ public class Customer extends javax.swing.JFrame {
         new Home().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        new Settings().setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -454,6 +474,7 @@ public class Customer extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -44,7 +44,7 @@ public class SignUp extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        jPasswordField2 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sign Up");
@@ -128,7 +128,7 @@ public class SignUp extends javax.swing.JFrame {
                             .addComponent(jPasswordField1)
                             .addComponent(jTextField2)
                             .addComponent(jTextField3)
-                            .addComponent(jTextField4))))
+                            .addComponent(jPasswordField2))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -159,7 +159,7 @@ public class SignUp extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -197,7 +197,7 @@ public class SignUp extends javax.swing.JFrame {
                                     + "'" + String.valueOf(jPasswordField1.getPassword()) + "', "
                                     + "'0', " + jComboBox1.getSelectedIndex() + ", "
                                     + "'" + jTextField3.getText() + "', "
-                                    + "'" + jTextField4.getText() + "');");
+                                    + "'" + String.valueOf(jPasswordField2.getPassword()) + "');");
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
                                     + "Go back to Login.");
                         } else {
@@ -233,7 +233,7 @@ public class SignUp extends javax.swing.JFrame {
                 || jPasswordField1.getPassword() == null
                 || jTextField2.getText().equals("")
                 || jTextField3.getText().equals("")
-                || jTextField4.getText().equals("")) {
+                || String.valueOf(jPasswordField2.getPassword()).equals("")) {
             JOptionPane.showMessageDialog(this, "Invalid sign-up details! Try again!");
             return false;
         }
@@ -294,9 +294,9 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
