@@ -176,9 +176,9 @@ public class SignUp extends javax.swing.JFrame {
         jButton2.setEnabled(false);
 
         Loading loading = new Loading();
+        loading.setVisible(true);
 
         new Thread(() -> {
-            loading.setVisible(true);
 
             if (validateFields()) {
                 try {
@@ -190,12 +190,12 @@ public class SignUp extends javax.swing.JFrame {
                         if (rs.getInt(1) == 0) {
                             Statement stmt0 = conn.createStatement();
                             stmt0.executeUpdate("INSERT INTO login "
-                                    + "(name, username, password, lastLogin, type, email, key) "
+                                    + "(name, username, password, type, email, key) "
                                     + "VALUES "
                                     + "('" + jTextField2.getText() + "', "
                                     + "'" + jTextField1.getText() + "', "
                                     + "'" + String.valueOf(jPasswordField1.getPassword()) + "', "
-                                    + "'0', " + jComboBox1.getSelectedIndex() + ", "
+                                    + "'" + jComboBox1.getSelectedIndex() + "', "
                                     + "'" + jTextField3.getText() + "', "
                                     + "'" + String.valueOf(jPasswordField2.getPassword()) + "');");
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
@@ -206,6 +206,7 @@ public class SignUp extends javax.swing.JFrame {
                         }
                     }
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(SignUp.class.getName())
                             .log(Level.SEVERE, null, ex);
                 } finally {
@@ -218,6 +219,9 @@ public class SignUp extends javax.swing.JFrame {
                         }
                     }
                 }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "All fields must be filled!");
             }
 
             loading.dispose();
@@ -238,7 +242,7 @@ public class SignUp extends javax.swing.JFrame {
             return false;
         }
 
-        return false;
+        return true;
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
