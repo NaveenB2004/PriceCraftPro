@@ -297,10 +297,12 @@ public class LogIn extends javax.swing.JFrame {
                     case 1 -> {
                         // goto qs
                         new Customer().setVisible(true);
+                        this.dispose();
                     }
                     case 2 -> {
                         // goto seller
                         new Item().setVisible(true);
+                        this.dispose();
                     }
 
                 }
