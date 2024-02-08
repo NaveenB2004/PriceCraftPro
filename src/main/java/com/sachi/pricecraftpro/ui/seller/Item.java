@@ -545,8 +545,8 @@ public class Item extends javax.swing.JFrame {
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
 
-        jLabel9.setText("");
-        jTextField3.setText("---");
+        jLabel9.setText("---");
+        jTextField3.setText("");
         jTextField4.setText("");
         jComboBox2.setSelectedIndex(0);
 
