@@ -705,12 +705,13 @@ public class Item extends javax.swing.JFrame {
                         if (rs.getInt(1) == 0) {
                             list.add(1 + "-1");
                         } else {
+                            // todo bug fix
                             Statement stmt1 = conn.createStatement();
                             ResultSet rs1 = stmt1.executeQuery("SELECT id "
                                     + "FROM material "
                                     + "DESC LIMIT 1");
                             while (rs1.next()) {
-                                list.add(String.valueOf(rs.getInt(1) + 1) + "-1");
+                                list.add(String.valueOf(rs1.getInt(1) + 1) + "-1");
                             }
                         }
                         Statement stmt0 = conn.createStatement();
@@ -852,9 +853,10 @@ public class Item extends javax.swing.JFrame {
                 closeConn();
             }
 
+            // todo bug fix
             body += "Added items : \n";
-            for (String e : list) {
-                String[] item = e.split("-");
+            for (int i =0; i < list.size(); i++) {
+                String[] item = list.get(i).split("-");
                 if (item[1].equals("1")) {
                     body += "|- " + items(item[0]) + "\n";
 
@@ -862,8 +864,8 @@ public class Item extends javax.swing.JFrame {
             }
 
             body += "\nUpdated items : \n";
-            for (String e : list) {
-                String[] item = e.split("-");
+            for (int i =0; i < list.size(); i++) {
+                String[] item = list.get(i).split("-");
                 if (item[1].equals("2")) {
                     body += "|- " + items(item[0]) + "\n";
 
@@ -871,14 +873,14 @@ public class Item extends javax.swing.JFrame {
             }
 
             body += "\nDeleted items : \n";
-            for (String e : list) {
-                String[] item = e.split("-");
+            for (int i =0; i < list.size(); i++) {
+                String[] item = list.get(i).split("-");
                 if (item[1].equals("3")) {
                     body += "|- " + items(item[0]) + "\n";
 
                 }
             }
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
