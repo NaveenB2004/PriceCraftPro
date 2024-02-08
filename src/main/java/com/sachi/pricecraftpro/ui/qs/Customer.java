@@ -23,28 +23,34 @@ public class Customer extends javax.swing.JFrame {
         initComponents();
         startup();
     }
-
+    
     Connection conn = null;
     DefaultTableModel model = null;
-
+    
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-
+        
         new Thread(() -> {
             model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
-
+            
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT id, name, email, count "
+                ResultSet rs = stmt.executeQuery("SELECT id, name, email "
                         + "FROM customer "
                         + "WHERE qs = " + LogIn.id);
                 while (rs.next()) {
-                    Object[] row = {rs.getString(1), rs.getString(2),
-                        rs.getString(3), rs.getString(4)};
-                    model.addRow(row);
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT DISTINCT COUNT(plan) "
+                            + "FROM cart "
+                            + "WHERE customer = '" + rs.getString(1) + "'");
+                    while (rs0.next()) {
+                        Object[] row = {rs.getString(1), rs.getString(2),
+                            rs.getString(3), rs0.getString(1)};
+                        model.addRow(row);
+                    }
                 }
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Error!");
@@ -58,7 +64,7 @@ public class Customer extends javax.swing.JFrame {
                             .log(Level.SEVERE, null, ex);
                 }
             }
-
+            
             l.dispose();
         }).start();
     }
@@ -321,12 +327,12 @@ public class Customer extends javax.swing.JFrame {
         String cusId = (String) model.getValueAt(jTable1.getSelectedRow(), 0);
         String name = (String) model.getValueAt(jTable1.getSelectedRow(), 1);
         String mail = (String) model.getValueAt(jTable1.getSelectedRow(), 2);
-
+        
         jButton5.setEnabled(true);
         jButton3.setEnabled(true);
         jButton2.setEnabled(true);
         jButton4.setEnabled(false);
-
+        
         jLabel4.setText(cusId);
         jTextField1.setText(name);
         jTextField2.setText(mail);
@@ -334,12 +340,12 @@ public class Customer extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jTable1.clearSelection();
-
+        
         jButton5.setEnabled(false);
         jButton3.setEnabled(false);
         jButton2.setEnabled(false);
         jButton4.setEnabled(true);
-
+        
         jTextField1.setText("");
         jTextField2.setText("");
         jLabel4.setText("---");
@@ -404,9 +410,9 @@ public class Customer extends javax.swing.JFrame {
             conn = new DBConnection().CONN();
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("INSERT INTO customer "
-                    + "(qs, name, email, count) VALUES "
+                    + "(qs, name, email) VALUES "
                     + "('" + LogIn.id + "', '" + jTextField1.getText() + "', "
-                    + "'" + jTextField2.getText() + "', 0)");
+                    + "'" + jTextField2.getText() + "')");
             startup();
             jButton6ActionPerformed(evt);
             JOptionPane.showMessageDialog(this, "Success!");
