@@ -43,7 +43,7 @@ public class Customer extends javax.swing.JFrame {
                         + "WHERE qs = " + LogIn.id);
                 while (rs.next()) {
                     Statement stmt0 = conn.createStatement();
-                    ResultSet rs0 = stmt0.executeQuery("SELECT DISTINCT COUNT(plan) "
+                    ResultSet rs0 = stmt0.executeQuery("SELECT COUNT(DISTINCT plan) "
                             + "FROM cart "
                             + "WHERE customer = '" + rs.getString(1) + "'");
                     while (rs0.next()) {
