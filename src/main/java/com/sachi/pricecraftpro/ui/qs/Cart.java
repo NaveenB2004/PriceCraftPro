@@ -25,13 +25,12 @@ public class Cart extends javax.swing.JFrame {
      */
     public Cart() {
         initComponents();
-        setExtendedState(this.MAXIMIZED_BOTH);
+        this.setExtendedState(MAXIMIZED_BOTH);
         startup();
     }
 
     public static String id = null;
     Connection conn;
-    JMenuItem[] item = null;
     int i = 0;
     boolean unsaved = false;
 
@@ -103,21 +102,24 @@ public class Cart extends javax.swing.JFrame {
                     + "FROM cart "
                     + "WHERE customer = '" + id + "'");
             while (rs.next()) {
-                item = new JMenuItem[rs.getInt(1)];
                 Statement stmt0 = conn.createStatement();
                 ResultSet rs0 = stmt0.executeQuery("SELECT DISTINCT plan "
                         + "FROM cart "
                         + "WHERE customer = '" + id + "'");
-                i = 0;
                 while (rs0.next()) {
-                    item[i].setIcon(new ImageIcon(getClass()
+                    JMenuItem item = new JMenuItem();
+                    item.setIcon(new ImageIcon(getClass()
                             .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
-                    item[i].setText(rs0.getString(1));
-                    item[i].addActionListener((ActionEvent evt) -> {
-                        menuItemOperations();
+                    item.setText(rs0.getString(1));
+                    item.addActionListener((ActionEvent evt) -> {
+                        try {
+                            menuItemOperations(rs0.getString(1));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Cart.class.getName())
+                                    .log(Level.SEVERE, null, ex);
+                        }
                     });
-                    jMenu3.add(item[i]);
-                    i++;
+                    jMenu3.add(item);
                 }
             }
         } catch (SQLException ex) {
@@ -140,57 +142,51 @@ public class Cart extends javax.swing.JFrame {
         jButton5.setEnabled(false);
     }
 
-    private void menuItemOperations() {
-        for (int j = 0; j <= i; j++) {
-            if (item[j].isSelected()) {
-                String itemName = item[j].getText();
-                new Thread(() -> {
-                    Loading l = new Loading();
-                    l.setVisible(true);
-
-                    jLabel4.setText(itemName);
-                    DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-                    model.setRowCount(0);
-                    try {
-                        openConn();
-                        Statement stmt = conn.createStatement();
-                        ResultSet rs = stmt.executeQuery("SELECT material, units "
-                                + "FROM cart "
-                                + "WHERE customer = '" + id + "' "
-                                + "AND plan = '" + itemName + "'");
-                        while (rs.next()) {
-                            Statement stmt0 = conn.createStatement();
-                            ResultSet rs0 = stmt0.executeQuery("SELECT id, name, price, category "
-                                    + "FROM material "
-                                    + "WHERE id = '" + rs.getString(1) + "'");
-                            while (rs0.next()) {
-                                Statement stmt1 = conn.createStatement();
-                                ResultSet rs1 = stmt1.executeQuery("SELECT name "
-                                        + "FROM category "
-                                        + "WHERE id = '" + rs0.getString(4) + "'");
-                                while (rs1.next()) {
-                                    Object[] row = {rs0.getString(1), rs0.getString(2),
-                                        rs.getString(2), rs.getInt(2) * rs0.getInt(3),
-                                        rs1.getString(1)};
-                                    model.addRow(row);
-                                }
-                            }
+    private void menuItemOperations(String itemName) {
+        Loading l = new Loading();
+        l.setVisible(true);
+        
+        new Thread(() -> {
+            jLabel4.setText(itemName);
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            model.setRowCount(0);
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT material, units "
+                        + "FROM cart "
+                        + "WHERE customer = '" + id + "' "
+                        + "AND plan = '" + itemName + "'");
+                while (rs.next()) {
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT id, name, price, category "
+                            + "FROM material "
+                            + "WHERE id = '" + rs.getString(1) + "'");
+                    while (rs0.next()) {
+                        Statement stmt1 = conn.createStatement();
+                        ResultSet rs1 = stmt1.executeQuery("SELECT name "
+                                + "FROM category "
+                                + "WHERE id = '" + rs0.getString(4) + "'");
+                        while (rs1.next()) {
+                            Object[] row = {rs0.getString(1), rs0.getString(2),
+                                rs.getString(2), rs.getInt(2) * rs0.getInt(3),
+                                rs1.getString(1)};
+                            model.addRow(row);
                         }
-                    } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(this, "Error!");
-                        Logger.getLogger(Cart.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    } finally {
-                        closeConn();
                     }
-
-                    panelOperations(true);
-
-                    l.dispose();
-                }).start();
-                break;
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
             }
-        }
+
+            panelOperations(true);
+
+            l.dispose();
+        }).start();
     }
 
     private void openConn() {
@@ -285,7 +281,7 @@ public class Cart extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cart");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Estimate Editor : "));
@@ -696,23 +692,9 @@ public class Cart extends javax.swing.JFrame {
                     + "AND customer = '" + id + "'");
             while (rs.next()) {
                 if (rs.getInt(1) == 0) {
-                    Statement stmt0 = conn.createStatement();
-                    stmt0.executeUpdate("UPDATE cart "
-                            + "SET plan = '" + name + "' "
-                            + "WHERE plan = '" + jLabel4.getText() + "' "
-                            + "AND customer = '" + id + "'");
-
-                    for (int j = 0; j <= i; j++) {
-                        if (item[j].getText().equals(jLabel4.getText())) {
-                            item[j].setText(name);
-                            break;
-                        }
-                    }
-
-                    jLabel4.setText(name);
-
+                    startup();
                     JOptionPane.showMessageDialog(this,
-                            "Success!");
+                            "Success! Please select the plan to continue!");
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Name already in use. Please use another.");
