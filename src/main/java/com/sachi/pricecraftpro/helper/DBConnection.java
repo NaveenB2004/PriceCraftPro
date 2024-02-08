@@ -50,7 +50,7 @@ public class DBConnection {
                 "CREATE TABLE material("
                 + "id INTEGER NOT NULL,"
                 + "name TEXT NOT NULL,"
-                + "price REAL NOT NULL,"
+                + "price INTEGER NOT NULL,"
                 + "category INTEGER NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (category) REFERENCES category(id) "
