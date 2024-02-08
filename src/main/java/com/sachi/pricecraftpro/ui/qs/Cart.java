@@ -217,7 +217,7 @@ public class Cart extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         int subTotal = 0;
-        for (int k = 1; k <= jComboBox1.getItemCount(); k++) {
+        for (int k = 1; k < jComboBox1.getItemCount(); k++) {
             details += jComboBox1.getItemAt(k) + " : \n";
             int categoryTotal = 0;
             for (int j = 0; j < model.getRowCount(); j++) {
@@ -604,7 +604,7 @@ public class Cart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        String name = JOptionPane.showInputDialog(this, "Enter name : ", "Estimate");
+        String name = JOptionPane.showInputDialog(this, "Enter name : ");
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -617,7 +617,9 @@ public class Cart extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this,
                             "Name already in use. Please use another.");
                 } else {
+                    jLabel4.setText(name);
                     panelOperations(true);
+                    detailsWritter();
                 }
             }
         } catch (SQLException ex) {
@@ -627,7 +629,6 @@ public class Cart extends javax.swing.JFrame {
         } finally {
             closeConn();
         }
-        detailsWritter();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -806,8 +807,8 @@ public class Cart extends javax.swing.JFrame {
             }
         }
 
-        String units = JOptionPane.showInputDialog(this, "Enter units : ", "Units");
-
+        String units = JOptionPane.showInputDialog(this, "Enter units : ");
+        System.out.println(units);
         try {
             if (Integer.parseInt(units) > 0) {
                 Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
