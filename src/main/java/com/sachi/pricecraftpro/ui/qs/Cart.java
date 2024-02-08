@@ -110,8 +110,8 @@ public class Cart extends javax.swing.JFrame {
                         + "WHERE customer = '" + id + "'");
                 i = 0;
                 while (rs0.next()) {
-                    item[i].setIcon(new ImageIcon(getClass()
-                            .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
+//                    item[i].setIcon(new ImageIcon(getClass()
+//                            .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
                     item[i].setText(rs0.getString(1));
                     item[i].addActionListener((ActionEvent evt) -> {
                         menuItemOperations();
@@ -907,9 +907,9 @@ public class Cart extends javax.swing.JFrame {
                     closeConn();
                 }
 
-                for (int j = 0; j < model.getRowCount(); j++) {
-                    try {
-                        openConn();
+                try {
+                    openConn();
+                    for (int j = 0; j < model.getRowCount(); j++) {
                         Statement stmt = conn.createStatement();
                         stmt.executeUpdate("INSERT INTO cart "
                                 + "(customer, material, units, plan) "
@@ -918,15 +918,16 @@ public class Cart extends javax.swing.JFrame {
                                 + "'" + model.getValueAt(j, 0).toString() + "', "
                                 + "'" + model.getValueAt(j, 2).toString() + "', "
                                 + "'" + jLabel4.getText() + "')");
-                        JOptionPane.showMessageDialog(this, "Success!");
-                    } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(this, "Error!");
-                        Logger.getLogger(Cart.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    } finally {
-                        closeConn();
                     }
+                    JOptionPane.showMessageDialog(this, "Success!");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
                 }
+
             } else {
                 JOptionPane.showMessageDialog(this, "Nothing to save!");
             }
