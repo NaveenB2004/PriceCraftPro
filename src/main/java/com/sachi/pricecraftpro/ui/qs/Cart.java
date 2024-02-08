@@ -618,6 +618,7 @@ public class Cart extends javax.swing.JFrame {
                             "Name already in use. Please use another.");
                 } else {
                     jLabel4.setText(name);
+                    addMenuItems();
                     panelOperations(true);
                     detailsWritter();
                 }
