@@ -675,6 +675,7 @@ public class Item extends javax.swing.JFrame {
                             + "FROM material "
                             + "WHERE id = '" + jComboBox3.getSelectedIndex() + "'");
                     while (rs.next()) {
+                        System.out.println(rs.getString(1));
                         Object[] row = {rs.getString(1), rs.getString(2),
                             rs.getString(3), jComboBox3.getSelectedItem()};
                         model.addRow(row);
@@ -702,8 +703,17 @@ public class Item extends javax.swing.JFrame {
                     ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
                             + "FROM material");
                     while (rs.next()) {
-                        System.out.println(rs.getInt(1));
-                        list.add(String.valueOf(rs.getInt(1) + 1) + "-1");
+                        if (rs.getInt(1) == 0) {
+                            list.add(1 + "-1");
+                        } else {
+                            Statement stmt1 = conn.createStatement();
+                            ResultSet rs1 = stmt1.executeQuery("SELECT id "
+                                    + "FROM material "
+                                    + "DESC LIMIT 1");
+                            while (rs1.next()) {
+                                list.add(String.valueOf(rs.getInt(1) + 1) + "-1");
+                            }
+                        }
                         Statement stmt0 = conn.createStatement();
                         stmt0.executeUpdate("INSERT INTO material "
                                 + "(name, price, category) VALUES "
@@ -842,34 +852,34 @@ public class Item extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             body += "Added items : \n";
             for (String e : list) {
                 String[] item = e.split("-");
                 if (item[1].equals("1")) {
                     body += "|- " + items(item[0]) + "\n";
-                    
+
                 }
             }
-            
+
             body += "\nUpdated items : \n";
             for (String e : list) {
                 String[] item = e.split("-");
                 if (item[1].equals("2")) {
                     body += "|- " + items(item[0]) + "\n";
-                    
+
                 }
             }
-            
+
             body += "\nDeleted items : \n";
             for (String e : list) {
                 String[] item = e.split("-");
                 if (item[1].equals("3")) {
                     body += "|- " + items(item[0]) + "\n";
-                    
+
                 }
             }
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -891,7 +901,7 @@ public class Item extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             l.dispose();
         }).start();
     }//GEN-LAST:event_jButton7ActionPerformed
