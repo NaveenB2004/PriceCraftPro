@@ -38,9 +38,12 @@ public class Cart extends javax.swing.JFrame {
         l.setVisible(true);
 
         new Thread(() -> {
+            panelOperations(false);
+            
             jLabel4.setText("---");
             jTextArea1.setText("");
-            panelOperations(false);
+            jComboBox1.removeAllItems();
+            jComboBox1.addItem("All");
 
             try {
                 openConn();
@@ -695,9 +698,9 @@ public class Cart extends javax.swing.JFrame {
                     stmt0.executeUpdate("UPDATE cart "
                             + "SET plan = '" + name + "' "
                             + "WHERE plan = '" + jLabel4.getText() + "'");
-                    startup();
                     JOptionPane.showMessageDialog(this,
                             "Success! Please select the plan to continue!");
+                    startup();
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Name already in use. Please use another.");
