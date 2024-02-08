@@ -2,6 +2,7 @@ package com.sachi.pricecraftpro.ui.common;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.LogIn;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ public class Settings extends javax.swing.JFrame {
      */
     public Settings() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
     }
 
     Connection conn;

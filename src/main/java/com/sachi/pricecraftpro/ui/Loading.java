@@ -1,5 +1,7 @@
 package com.sachi.pricecraftpro.ui;
 
+import java.awt.Toolkit;
+
 public class Loading extends javax.swing.JFrame {
 
     /**
@@ -7,6 +9,8 @@ public class Loading extends javax.swing.JFrame {
      */
     public Loading() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
         jProgressBar1.setIndeterminate(true);
     }
 

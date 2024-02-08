@@ -6,6 +6,7 @@ import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import com.sachi.pricecraftpro.ui.common.Settings;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,6 +26,8 @@ public class Item extends javax.swing.JFrame {
      */
     public Item() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
         startup();
     }
 

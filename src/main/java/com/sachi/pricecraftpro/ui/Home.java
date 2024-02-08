@@ -1,5 +1,7 @@
 package com.sachi.pricecraftpro.ui;
 
+import java.awt.Toolkit;
+
 public class Home extends javax.swing.JFrame {
 
     /**
@@ -7,6 +9,8 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
     }
 
     /**
@@ -107,7 +111,7 @@ public class Home extends javax.swing.JFrame {
         );
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/international (2).png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cover.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

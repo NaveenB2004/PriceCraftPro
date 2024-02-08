@@ -1,6 +1,7 @@
 package com.sachi.pricecraftpro.ui;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,8 @@ public class SignUp extends javax.swing.JFrame {
      */
     public SignUp() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
     }
 
     Connection conn = null;

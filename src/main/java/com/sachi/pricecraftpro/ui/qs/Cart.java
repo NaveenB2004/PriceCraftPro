@@ -6,6 +6,7 @@ import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,6 +26,8 @@ public class Cart extends javax.swing.JFrame {
      */
     public Cart() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
         this.setExtendedState(MAXIMIZED_BOTH);
         startup();
     }

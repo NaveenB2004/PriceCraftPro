@@ -5,6 +5,7 @@ import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ public class Customer extends javax.swing.JFrame {
      */
     public Customer() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
         startup();
     }
     

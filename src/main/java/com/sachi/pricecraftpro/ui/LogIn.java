@@ -4,6 +4,7 @@ import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.qs.Customer;
 import com.sachi.pricecraftpro.ui.seller.Item;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +21,9 @@ public class LogIn extends javax.swing.JFrame {
      */
     public LogIn() {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")));
         startup();
-//        jButton1.putClientProperty("JButton.buttonType", "roundRect");
-//        jButton2.putClientProperty("JButton.buttonType", "roundRect");
     }
 
     Connection conn = null;
@@ -30,11 +31,14 @@ public class LogIn extends javax.swing.JFrame {
     public static String name = "";
 
     private void startup() {
-        jComboBox1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
-        jTextField1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
-        jPasswordField1.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
+        jComboBox1.setBorder(BorderFactory
+                .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
+        jTextField1.setBorder(BorderFactory
+                .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
+        jPasswordField1.setBorder(BorderFactory
+                .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
