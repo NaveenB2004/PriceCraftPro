@@ -107,17 +107,13 @@ public class Cart extends javax.swing.JFrame {
                         + "FROM cart "
                         + "WHERE customer = '" + id + "'");
                 while (rs0.next()) {
+                    String name = rs0.getString(1);
                     JMenuItem item = new JMenuItem();
                     item.setIcon(new ImageIcon(getClass()
                             .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
-                    item.setText(rs0.getString(1));
+                    item.setText(name);
                     item.addActionListener((ActionEvent evt) -> {
-                        try {
-                            menuItemOperations(rs0.getString(1));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Cart.class.getName())
-                                    .log(Level.SEVERE, null, ex);
-                        }
+                        menuItemOperations(name);
                     });
                     jMenu3.add(item);
                 }
@@ -145,7 +141,7 @@ public class Cart extends javax.swing.JFrame {
     private void menuItemOperations(String itemName) {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
             jLabel4.setText(itemName);
             DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
@@ -183,6 +179,7 @@ public class Cart extends javax.swing.JFrame {
                 closeConn();
             }
 
+            detailsWritter();
             panelOperations(true);
 
             l.dispose();
