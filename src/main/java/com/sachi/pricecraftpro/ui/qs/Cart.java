@@ -811,6 +811,7 @@ public class Cart extends javax.swing.JFrame {
         String units = JOptionPane.showInputDialog(this, "Enter units : ");
         System.out.println(units);
         try {
+            System.out.println(Integer.parseInt(units));
             if (Integer.parseInt(units) > 0) {
                 Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
                     model0.getValueAt(jTable2.getSelectedRow(), 1),
@@ -879,45 +880,60 @@ public class Cart extends javax.swing.JFrame {
             panelOperations(false);
 
             DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-            for (int j = 0; j < model.getRowCount(); j++) {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
-                            + "FROM cart "
-                            + "WHERE plan = '" + jLabel4.getText() + "'");
-                    while (rs.next()) {
-                        Statement stmt0 = conn.createStatement();
-                        ResultSet rs0 = stmt0.executeQuery("SELECT id "
-                                + "FROM material "
-                                + "WHERE name = '" + model.getValueAt(j, 4) + "'");
-                        while (rs0.next()) {
+            if (model.getRowCount() != 0) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    try {
+                        openConn();
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                                + "FROM cart "
+                                + "WHERE plan = '" + jLabel4.getText() + "'");
+                        while (rs.next()) {
                             if (rs.getInt(1) != 0) {
                                 Statement stmt1 = conn.createStatement();
                                 stmt1.executeUpdate("DELETE FROM cart "
                                         + "WHERE plan = '" + jLabel4.getText() + "'");
                             }
-                            Statement stmt2 = conn.createStatement();
-                            stmt2.executeUpdate("INSERT INTO cart "
+                        }
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Error!");
+                        Logger.getLogger(Cart.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    } finally {
+                        closeConn();
+                    }
+
+                    try {
+                        openConn();
+                        Statement stmt0 = conn.createStatement();
+                        ResultSet rs0 = stmt0.executeQuery("SELECT id "
+                                + "FROM material "
+                                + "WHERE name = '" + model.getValueAt(j, 4) + "'");
+                        while (rs0.next()) {
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate("INSERT INTO cart "
                                     + "(customer, material, units, plan) "
                                     + "VALUES "
                                     + "('" + id + "', '" + rs0.getString(1) + "', "
                                     + "'" + model.getValueAt(j, 2) + "', "
                                     + "'" + jLabel4.getText() + "')");
                             JOptionPane.showMessageDialog(this, "Success!");
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
 
-                l.dispose();
-                panelOperations(true);
+                        }
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Error!");
+                        Logger.getLogger(Cart.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    } finally {
+                        closeConn();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Nothing to save!");
             }
+
+            l.dispose();
+            panelOperations(true);
         }).start();
     }
 
