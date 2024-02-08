@@ -699,10 +699,10 @@ public class Item extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id "
-                            + "FROM material "
-                            + "DESC LIMIT 1");
+                    ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
+                            + "FROM material");
                     while (rs.next()) {
+                        System.out.println(rs.getInt(1));
                         list.add(String.valueOf(rs.getInt(1) + 1) + "-1");
                         Statement stmt0 = conn.createStatement();
                         stmt0.executeUpdate("INSERT INTO material "
