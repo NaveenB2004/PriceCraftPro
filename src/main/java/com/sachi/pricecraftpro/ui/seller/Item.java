@@ -1,14 +1,18 @@
 package com.sachi.pricecraftpro.ui.seller;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
+import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
+import com.sachi.pricecraftpro.ui.LogIn;
 import com.sachi.pricecraftpro.ui.common.Settings;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,26 +27,30 @@ public class Item extends javax.swing.JFrame {
         initComponents();
         startup();
     }
-    
+
     Connection conn;
-    
+    // add = 1, update = 2, delete = 3
+    List<String> list;
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
+        list = new ArrayList<>();
+
         new Thread(() -> {
             ActionEvent evt = null;
             jButton5ActionPerformed(evt);
             jButton6ActionPerformed(evt);
-            
+
             jComboBox1.removeAllItems();
             jComboBox2.removeAllItems();
             jComboBox3.removeAllItems();
-            
+
             jComboBox1.addItem("Please Select");
             jComboBox2.addItem("Please Select");
             jComboBox3.addItem("All");
-            
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -59,13 +67,13 @@ public class Item extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-            
+
             fillTable();
-            
+
             l.dispose();
         }).start();
     }
-    
+
     private void fillTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
@@ -92,11 +100,11 @@ public class Item extends javax.swing.JFrame {
             closeConn();
         }
     }
-    
+
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-    
+
     private void closeConn() {
         if (conn != null) {
             try {
@@ -396,6 +404,11 @@ public class Item extends javax.swing.JFrame {
         jLabel9.setText("---");
 
         jButton7.setText("Mail changes to QS");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -521,7 +534,7 @@ public class Item extends javax.swing.JFrame {
         jRadioButton1.setSelected(false);
         jRadioButton2.setSelected(false);
         jRadioButton3.setSelected(false);
-        
+
         jComboBox1.setSelectedIndex(0);
         jTextField1.setText("");
         jTextField2.setText("");
@@ -531,12 +544,12 @@ public class Item extends javax.swing.JFrame {
         jRadioButton4.setSelected(false);
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
-        
+
         jLabel9.setText("");
         jTextField3.setText("---");
         jTextField4.setText("");
         jComboBox2.setSelectedIndex(0);
-        
+
         jTable1.clearSelection();
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -686,11 +699,18 @@ public class Item extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
-                    stmt.executeUpdate("INSERT INTO material "
-                            + "(name, price, category) VALUES "
-                            + "('" + jTextField3.getText() + "', "
-                            + "'" + jTextField4.getText() + "', "
-                            + "'" + jComboBox2.getSelectedIndex() + "')");
+                    ResultSet rs = stmt.executeQuery("SELECT id "
+                            + "FROM material "
+                            + "DESC LIMIT 1");
+                    while (rs.next()) {
+                        list.add(String.valueOf(rs.getInt(1) + 1) + "-1");
+                        Statement stmt0 = conn.createStatement();
+                        stmt0.executeUpdate("INSERT INTO material "
+                                + "(name, price, category) VALUES "
+                                + "('" + jTextField3.getText() + "', "
+                                + "'" + jTextField4.getText() + "', "
+                                + "'" + jComboBox2.getSelectedIndex() + "')");
+                    }
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -716,6 +736,18 @@ public class Item extends javax.swing.JFrame {
                             + "price = '" + jTextField4.getText() + "', "
                             + "category = '" + jComboBox2.getSelectedIndex() + "' "
                             + "WHERE id = '" + jLabel9.getText() + "'");
+
+                    boolean n = false;
+                    for (String e : list) {
+                        if (e.equals(jLabel9.getText() + "-2")
+                                || e.equals(jLabel9.getText() + "-1")) {
+                            n = true;
+                        }
+                    }
+                    if (n == false) {
+                        list.add(jLabel9.getText() + "-2");
+                    }
+
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -736,6 +768,18 @@ public class Item extends javax.swing.JFrame {
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate("DELETE FROM material "
                             + "WHERE id = '" + jLabel9.getText() + "'");
+
+                    boolean n = false;
+                    for (String e : list) {
+                        if (e.equals(jLabel9.getText() + "-1")) {
+                            list.remove(e);
+                            n = true;
+                        }
+                    }
+                    if (n == false) {
+                        list.add(jLabel9.getText() + "-3");
+                    }
+
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -773,6 +817,110 @@ public class Item extends javax.swing.JFrame {
         jTextField4.setText(model.getValueAt(jTable1.getSelectedRow(), 2).toString());
         jComboBox2.setSelectedItem(model.getValueAt(jTable1.getSelectedRow(), 3));
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        Loading l = new Loading();
+        l.setVisible(true);
+
+        new Thread(() -> {
+            String body = null;
+            String[] login = new String[2];
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT name, email, key "
+                        + "FROM login "
+                        + "WHERE id = '" + LogIn.id + "'");
+                while (rs.next()) {
+                    body = "Seller Name : " + rs.getString(1) + "\n\n";
+                    login[0] = rs.getString(2);
+                    login[1] = rs.getString(3);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Item.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+            
+            body += "Added items : \n";
+            for (String e : list) {
+                String[] item = e.split("-");
+                if (item[1].equals("1")) {
+                    body += "|- " + items(item[0]) + "\n";
+                    
+                }
+            }
+            
+            body += "\nUpdated items : \n";
+            for (String e : list) {
+                String[] item = e.split("-");
+                if (item[1].equals("2")) {
+                    body += "|- " + items(item[0]) + "\n";
+                    
+                }
+            }
+            
+            body += "\nDeleted items : \n";
+            for (String e : list) {
+                String[] item = e.split("-");
+                if (item[1].equals("3")) {
+                    body += "|- " + items(item[0]) + "\n";
+                    
+                }
+            }
+            
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT email "
+                        + "FROM login "
+                        + "WHERE type = 1");
+                while (rs.next()) {
+                    EmailSender email = new EmailSender();
+                    email.setFrom(login[0]);
+                    email.setKey(login[1]);
+                    email.setSubject("Material Updates");
+                    email.setBody(body);
+                    email.setTo(rs.getString(1));
+                    email.sendMail();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Item.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+            
+            l.dispose();
+        }).start();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private String items(String id) {
+        try {
+            openConn();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name, price, category "
+                    + "FROM material "
+                    + "WHERE id = '" + id + "'");
+            while (rs.next()) {
+                Statement stmt0 = conn.createStatement();
+                ResultSet rs0 = stmt0.executeQuery("SELECT name "
+                        + "FROM category "
+                        + "WHERE id = '" + rs.getString(3) + "'");
+                while (rs0.next()) {
+                    return rs.getString(1) + "\t" + rs.getString(2)
+                            + "\t" + rs0.getString(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Item.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            closeConn();
+        }
+        return null;
+    }
 
     /**
      * @param args the command line arguments
