@@ -59,6 +59,7 @@ public class Customer extends javax.swing.JFrame {
                 }
             }
 
+            l.dispose();
         }).start();
     }
 
