@@ -39,12 +39,12 @@ public class Cart extends javax.swing.JFrame {
 
         new Thread(() -> {
             panelOperations(false);
-            
+
             jLabel4.setText("---");
             jTextArea1.setText("");
             jComboBox1.removeAllItems();
             jComboBox1.addItem("All");
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
             model.setRowCount(0);
 
@@ -147,6 +147,7 @@ public class Cart extends javax.swing.JFrame {
     }
 
     private void menuItemOperations(String itemName) {
+        checkUnsaved();
         Loading l = new Loading();
         l.setVisible(true);
 
@@ -603,6 +604,7 @@ public class Cart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        checkUnsaved();
         String name = JOptionPane.showInputDialog(this, "Enter name : ");
         try {
             openConn();
@@ -617,9 +619,10 @@ public class Cart extends javax.swing.JFrame {
                             "Name already in use. Please use another.");
                 } else {
                     jLabel4.setText(name);
-                    addMenuItems();
-                    panelOperations(true);
-                    detailsWritter();
+                    DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+                    model.setRowCount(0);
+                    jTextArea1.setText("");
+                    JOptionPane.showMessageDialog(this, "Success!");
                 }
             }
         } catch (SQLException ex) {
@@ -687,6 +690,7 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        checkUnsaved();
         String name = JOptionPane.showInputDialog(this, "Enter new name : ");
         try {
             openConn();
@@ -862,6 +866,8 @@ public class Cart extends javax.swing.JFrame {
                 model.setValueAt(Integer.parseInt(units) * price,
                         jTable3.getSelectedRow(), 3);
                 detailsWritter();
+                
+                unsaved = true;
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
             }
@@ -909,6 +915,7 @@ public class Cart extends javax.swing.JFrame {
                                 + "'" + model.getValueAt(j, 2).toString() + "', "
                                 + "'" + jLabel4.getText() + "')");
                     }
+                    unsaved = false;
                     JOptionPane.showMessageDialog(this, "Success!");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
@@ -954,7 +961,8 @@ public class Cart extends javax.swing.JFrame {
 
     private void checkUnsaved() {
         if (unsaved) {
-            int reply = JOptionPane.showConfirmDialog(this, "You have unsaved works. Save now?",
+            int reply = JOptionPane.showConfirmDialog(this,
+                    "You have unsaved works. Save now?",
                     "Save", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 saveOperation();
