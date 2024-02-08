@@ -28,20 +28,20 @@ public class Cart extends javax.swing.JFrame {
         setExtendedState(this.MAXIMIZED_BOTH);
         startup();
     }
-
+    
     public static String id = null;
     Connection conn;
     JMenuItem[] item = null;
     int i = 0;
     boolean unsaved = false;
-
+    
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-
+        
         new Thread(() -> {
             panelOperations(false);
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -57,19 +57,19 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             firstTableFill();
-
+            
             addMenuItems();
-
+            
             l.dispose();
         }).start();
     }
-
+    
     private void firstTableFill() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
-
+        
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -94,7 +94,7 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }
-
+    
     private void addMenuItems() {
         try {
             openConn();
@@ -128,18 +128,18 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }
-
+    
     private void panelOperations(boolean option) {
         for (Component com : jPanel1.getComponents()) {
             com.setEnabled(option);
         }
         jButton3.setEnabled(option);
         jButton1.setEnabled(option);
-
+        
         jButton4.setEnabled(false);
         jButton5.setEnabled(false);
     }
-
+    
     private void menuItemOperations() {
         for (int j = 0; j <= i; j++) {
             if (item[j].isSelected()) {
@@ -147,7 +147,7 @@ public class Cart extends javax.swing.JFrame {
                 new Thread(() -> {
                     Loading l = new Loading();
                     l.setVisible(true);
-
+                    
                     jLabel4.setText(itemName);
                     DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                     model.setRowCount(0);
@@ -183,20 +183,20 @@ public class Cart extends javax.swing.JFrame {
                     } finally {
                         closeConn();
                     }
-
+                    
                     panelOperations(true);
-
+                    
                     l.dispose();
                 }).start();
                 break;
             }
         }
     }
-
+    
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-
+    
     private void closeConn() {
         if (conn != null) {
             try {
@@ -207,15 +207,15 @@ public class Cart extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private synchronized void detailsWritterX() {
         jProgressBar1.setIndeterminate(true);
-
+        
         String details;
         // basic details
         details = "QS Name : \t" + LogIn.name + "\n";
         details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
-
+        
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         int subTotal = 0;
         for (int k = 1; k < jComboBox1.getItemCount(); k++) {
@@ -234,12 +234,12 @@ public class Cart extends javax.swing.JFrame {
             subTotal += categoryTotal;
         }
         details += "[Sub Total : " + subTotal + "]";
-
+        
         jTextArea1.setText(details);
-
+        
         jProgressBar1.setIndeterminate(false);
     }
-
+    
     private void detailsWritter() {
         new Thread(() -> {
             detailsWritterX();
@@ -287,11 +287,6 @@ public class Cart extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cart");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Estimate Editor : "));
 
@@ -386,6 +381,7 @@ public class Cart extends javax.swing.JFrame {
         });
 
         jButton2.setText("Edit units");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -638,10 +634,10 @@ public class Cart extends javax.swing.JFrame {
         Loading l = new Loading();
         l.setVisible(true);
         panelOperations(false);
-
+        
         new Thread(() -> {
             EmailSender email = new EmailSender();
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -658,7 +654,7 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
@@ -676,15 +672,15 @@ public class Cart extends javax.swing.JFrame {
             } finally {
                 closeConn();
             }
-
+            
             email.setSubject("Building estimate - " + jLabel4.getText());
             email.setBody(jTextArea1.getText());
             boolean status = email.sendMail();
-
+            
             l.dispose();
-
+            
             JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
-
+            
             panelOperations(true);
         }).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -705,16 +701,16 @@ public class Cart extends javax.swing.JFrame {
                             + "SET plan = '" + name + "' "
                             + "WHERE plan = '" + jLabel4.getText() + "' "
                             + "AND customer = '" + id + "'");
-
+                    
                     for (int j = 0; j <= i; j++) {
                         if (item[j].getText().equals(jLabel4.getText())) {
                             item[j].setText(name);
                             break;
                         }
                     }
-
+                    
                     jLabel4.setText(name);
-
+                    
                     JOptionPane.showMessageDialog(this,
                             "Success!");
                 } else {
@@ -731,7 +727,7 @@ public class Cart extends javax.swing.JFrame {
         }
         detailsWritter();
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void filter(int filter) {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -801,7 +797,7 @@ public class Cart extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         DefaultTableModel model0 = (DefaultTableModel) jTable2.getModel();
         DefaultTableModel model1 = (DefaultTableModel) jTable3.getModel();
-
+        
         for (int j = 0; j < model1.getRowCount(); j++) {
             if (model0.getValueAt(jTable2.getSelectedRow(), 0)
                     .equals(model1.getValueAt(j, 0))) {
@@ -809,7 +805,7 @@ public class Cart extends javax.swing.JFrame {
                 return;
             }
         }
-
+        
         String units = JOptionPane.showInputDialog(this, "Enter units : ");
         try {
             if (Integer.parseInt(units) > 0) {
@@ -818,14 +814,14 @@ public class Cart extends javax.swing.JFrame {
                     units, Integer.parseInt(model0.getValueAt(jTable2.getSelectedRow(), 2)
                     .toString()) * Integer.parseInt(units),
                     model0.getValueAt(jTable2.getSelectedRow(), 3)};
-
+                
                 model1.addRow(row);
-
+                
                 jTable2.clearSelection();
                 jButton4.setEnabled(false);
-
+                
                 unsaved = true;
-
+                
                 detailsWritter();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
@@ -840,12 +836,13 @@ public class Cart extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.removeRow(jTable3.getSelectedRow());
-
+        
         jTable3.clearSelection();
         jButton5.setEnabled(false);
-
+        jButton2.setEnabled(false);
+        
         unsaved = true;
-
+        
         detailsWritter();
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -855,12 +852,25 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String units = JOptionPane.showInputDialog(this, "Enter new value : ", "Units");
+        String units = JOptionPane.showInputDialog(this, "Enter new value : ");
         try {
-            int unitsInt = Integer.parseInt(units);
-            if (unitsInt > 0) {
+            if (Integer.parseInt(units) > 0) {
+                DefaultTableModel modelx = (DefaultTableModel) jTable2.getModel();
                 DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+                
+                int price = 0;
+                for (int j = 0; j < modelx.getRowCount(); j++) {
+                    if (modelx.getValueAt(j, 0).toString()
+                            .equals(model.getValueAt(jTable3.getSelectedRow(), 0))) {
+                        price = Integer.parseInt(modelx.getValueAt(j, 2)
+                                .toString());
+                        break;
+                    }
+                }
+                
                 model.setValueAt(units, jTable3.getSelectedRow(), 2);
+                model.setValueAt(Integer.parseInt(units) * price,
+                        jTable3.getSelectedRow(), 3);
                 detailsWritter();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
@@ -875,14 +885,14 @@ public class Cart extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         saveOperation();
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    
     private void saveOperation() {
         Loading l = new Loading();
         l.setVisible(true);
-
+        
         new Thread(() -> {
             panelOperations(false);
-
+            
             DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
             if (model.getRowCount() != 0) {
                 for (int j = 0; j < model.getRowCount(); j++) {
@@ -906,7 +916,7 @@ public class Cart extends javax.swing.JFrame {
                     } finally {
                         closeConn();
                     }
-
+                    
                     try {
                         openConn();
                         Statement stmt0 = conn.createStatement();
@@ -922,7 +932,7 @@ public class Cart extends javax.swing.JFrame {
                                     + "'" + model.getValueAt(j, 2) + "', "
                                     + "'" + jLabel4.getText() + "')");
                             JOptionPane.showMessageDialog(this, "Success!");
-
+                            
                         }
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, "Error!");
@@ -935,7 +945,7 @@ public class Cart extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Nothing to save!");
             }
-
+            
             l.dispose();
             panelOperations(true);
         }).start();
@@ -951,23 +961,21 @@ public class Cart extends javax.swing.JFrame {
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         jButton4.setEnabled(true);
         jButton5.setEnabled(false);
+        jButton2.setEnabled(false);
         jTable3.clearSelection();
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
         jButton4.setEnabled(false);
         jButton5.setEnabled(true);
+        jButton2.setEnabled(true);
         jTable2.clearSelection();
     }//GEN-LAST:event_jTable3MouseClicked
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         checkUnsaved();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        checkUnsaved();
-    }//GEN-LAST:event_formWindowClosed
-
+    
     private void checkUnsaved() {
         if (unsaved) {
             int reply = JOptionPane.showConfirmDialog(this, "You have unsaved works. Save now?",
