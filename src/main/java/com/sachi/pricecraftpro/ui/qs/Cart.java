@@ -746,7 +746,7 @@ public class Cart extends javax.swing.JFrame {
                     while (rs.next()) {
                         Statement stmt0 = conn.createStatement();
                         ResultSet rs0 = stmt0.executeQuery("SELECT * "
-                                + "FROM materials "
+                                + "FROM material "
                                 + "WHERE category = '" + rs.getString(1) + "'");
                         while (rs0.next()) {
                             Object[] row = {rs0.getString(1),
