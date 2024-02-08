@@ -44,6 +44,9 @@ public class Cart extends javax.swing.JFrame {
             jTextArea1.setText("");
             jComboBox1.removeAllItems();
             jComboBox1.addItem("All");
+            
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            model.setRowCount(0);
 
             try {
                 openConn();
