@@ -711,7 +711,7 @@ public class Item extends javax.swing.JFrame {
                                     + "FROM material "
                                     + "DESC LIMIT 1");
                             while (rs1.next()) {
-                                list.add(String.valueOf(rs1.getInt(1) + 1) + "-1");
+                                list.add((rs1.getInt(1) + 1) + "-1");
                             }
                         }
                         Statement stmt0 = conn.createStatement();
@@ -748,9 +748,9 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jLabel9.getText() + "'");
 
                     boolean n = false;
-                    for (String e : list) {
-                        if (e.equals(jLabel9.getText() + "-2")
-                                || e.equals(jLabel9.getText() + "-1")) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).equals(jLabel9.getText() + "-2")
+                                || list.get(i).equals(jLabel9.getText() + "-1")) {
                             n = true;
                         }
                     }
@@ -780,9 +780,9 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jLabel9.getText() + "'");
 
                     boolean n = false;
-                    for (String e : list) {
-                        if (e.equals(jLabel9.getText() + "-1")) {
-                            list.remove(e);
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).equals(jLabel9.getText() + "-1")) {
+                            list.remove(i);
                             n = true;
                         }
                     }
@@ -855,32 +855,31 @@ public class Item extends javax.swing.JFrame {
 
             // todo bug fix
             body += "Added items : \n";
-            for (int i =0; i < list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String[] item = list.get(i).split("-");
                 if (item[1].equals("1")) {
                     body += "|- " + items(item[0]) + "\n";
-
                 }
             }
 
             body += "\nUpdated items : \n";
-            for (int i =0; i < list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String[] item = list.get(i).split("-");
                 if (item[1].equals("2")) {
                     body += "|- " + items(item[0]) + "\n";
-
                 }
             }
 
             body += "\nDeleted items : \n";
-            for (int i =0; i < list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String[] item = list.get(i).split("-");
                 if (item[1].equals("3")) {
                     body += "|- " + items(item[0]) + "\n";
-
                 }
             }
             
+            System.out.println(body);
+
             try {
                 openConn();
                 Statement stmt = conn.createStatement();
