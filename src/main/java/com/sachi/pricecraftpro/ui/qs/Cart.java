@@ -5,6 +5,7 @@ import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -225,7 +226,8 @@ public class Cart extends javax.swing.JFrame {
                     details += "|- " + model.getValueAt(j, 1) + "\t["
                             + model.getValueAt(j, 2)
                             + "]\t" + model.getValueAt(j, 3) + "\n";
-                    categoryTotal += Integer.parseInt((String) model.getValueAt(j, 3));
+                    categoryTotal += Integer.parseInt(model.getValueAt(j, 3)
+                            .toString());
                 }
             }
             details += "[Total : " + categoryTotal + "]\n\n";
@@ -809,14 +811,11 @@ public class Cart extends javax.swing.JFrame {
         }
 
         String units = JOptionPane.showInputDialog(this, "Enter units : ");
-        System.out.println(units);
         try {
-            System.out.println(Integer.parseInt(units));
             if (Integer.parseInt(units) > 0) {
                 Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
                     model0.getValueAt(jTable2.getSelectedRow(), 1),
-                    units,
-                    Integer.parseInt(model0.getValueAt(jTable2.getSelectedRow(), 2)
+                    units, Integer.parseInt(model0.getValueAt(jTable2.getSelectedRow(), 2)
                     .toString()) * Integer.parseInt(units),
                     model0.getValueAt(jTable2.getSelectedRow(), 3)};
 
@@ -831,8 +830,10 @@ public class Cart extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
             }
-        } catch (NumberFormatException e) {
+        } catch (HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid value!");
+            Logger.getLogger(Cart.class.getName())
+                    .log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -856,15 +857,18 @@ public class Cart extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String units = JOptionPane.showInputDialog(this, "Enter new value : ", "Units");
         try {
-            if (Integer.parseInt(units) > 0) {
+            int unitsInt = Integer.parseInt(units);
+            if (unitsInt > 0) {
                 DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                 model.setValueAt(units, jTable3.getSelectedRow(), 2);
                 detailsWritter();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
             }
-        } catch (NumberFormatException e) {
+        } catch (HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid value!");
+            Logger.getLogger(Cart.class.getName())
+                    .log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
