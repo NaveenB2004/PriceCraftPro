@@ -110,8 +110,8 @@ public class Cart extends javax.swing.JFrame {
                         + "WHERE customer = '" + id + "'");
                 i = 0;
                 while (rs0.next()) {
-//                    item[i].setIcon(new ImageIcon(getClass()
-//                            .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
+                    item[i].setIcon(new ImageIcon(getClass()
+                            .getResource("/icons/description_FILL0_wght200_GRAD0_opsz20.png")));
                     item[i].setText(rs0.getString(1));
                     item[i].addActionListener((ActionEvent evt) -> {
                         menuItemOperations();

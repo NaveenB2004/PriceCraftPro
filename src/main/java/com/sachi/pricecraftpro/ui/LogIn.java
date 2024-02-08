@@ -286,10 +286,9 @@ public class LogIn extends javax.swing.JFrame {
         jButton2.setEnabled(false);
 
         Loading loading = new Loading();
+        loading.setVisible(true);
 
         new Thread(() -> {
-            loading.setVisible(true);
-
             if (validateLogin(jComboBox1.getSelectedIndex(),
                     jTextField1.getText(),
                     String.valueOf(jPasswordField1.getPassword()))) {
