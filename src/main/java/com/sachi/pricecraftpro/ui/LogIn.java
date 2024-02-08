@@ -124,12 +124,7 @@ public class LogIn extends javax.swing.JFrame {
 
         jComboBox1.setBackground(new java.awt.Color(51, 51, 51));
         jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seller", "QS" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select", "QS", "Seller" }));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -179,7 +174,6 @@ public class LogIn extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Register");
-        jButton2.setActionCommand("Register");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -286,10 +280,6 @@ public class LogIn extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         jButton1.setEnabled(false);
@@ -326,10 +316,9 @@ public class LogIn extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-                new SignUp().setVisible(true);
-                this.dispose();
-        
+        new SignUp().setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private boolean validateLogin(int type, String username, String password) {
