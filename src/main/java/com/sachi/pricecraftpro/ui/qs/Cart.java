@@ -39,6 +39,7 @@ public class Cart extends javax.swing.JFrame {
         l.setVisible(true);
 
         new Thread(() -> {
+            jLabel4.setText("---");
             panelOperations(false);
 
             try {
@@ -95,6 +96,7 @@ public class Cart extends javax.swing.JFrame {
     }
 
     private void addMenuItems() {
+        jMenu3.removeAll();
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -679,7 +681,7 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String name = JOptionPane.showInputDialog(this, "Enter new name : ", "Estimate");
+        String name = JOptionPane.showInputDialog(this, "Enter new name : ");
         try {
             openConn();
             Statement stmt = conn.createStatement();
