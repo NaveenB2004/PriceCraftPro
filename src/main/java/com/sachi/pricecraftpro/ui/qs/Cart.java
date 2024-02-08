@@ -40,6 +40,7 @@ public class Cart extends javax.swing.JFrame {
 
         new Thread(() -> {
             jLabel4.setText("---");
+            jTextArea1.setText("");
             panelOperations(false);
 
             try {
@@ -691,6 +692,10 @@ public class Cart extends javax.swing.JFrame {
                     + "AND customer = '" + id + "'");
             while (rs.next()) {
                 if (rs.getInt(1) == 0) {
+                    Statement stmt0 = conn.createStatement();
+                    stmt0.executeUpdate("UPDATE cart "
+                            + "SET plan = '" + name + "' "
+                            + "WHERE plan = '" + jLabel4.getText() + "'");
                     startup();
                     JOptionPane.showMessageDialog(this,
                             "Success! Please select the plan to continue!");
