@@ -31,7 +31,6 @@ public class Cart extends javax.swing.JFrame {
 
     public static String id = null;
     Connection conn;
-    int i = 0;
     boolean unsaved = false;
 
     private void startup() {
@@ -711,7 +710,6 @@ public class Cart extends javax.swing.JFrame {
         } finally {
             closeConn();
         }
-        detailsWritter();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void filter(int filter) {
