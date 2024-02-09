@@ -443,12 +443,12 @@ public class Cart extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
                                 .addComponent(jButton4)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton5)
-                                .addGap(114, 114, 114))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -628,6 +628,7 @@ public class Cart extends javax.swing.JFrame {
                     DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
                     model.setRowCount(0);
                     jTextArea1.setText("");
+                    panelOperations(true);
                     JOptionPane.showMessageDialog(this, "Success!");
                 }
             }
