@@ -224,7 +224,7 @@
               <StringArray count="3">
                 <StringItem index="0" value="Please Select"/>
                 <StringItem index="1" value="QS"/>
-                <StringItem index="2" value="Seller"/>
+                <StringItem index="2" value="Admin"/>
               </StringArray>
             </Property>
           </Properties>

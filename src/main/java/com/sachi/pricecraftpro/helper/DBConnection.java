@@ -42,7 +42,7 @@ public class DBConnection {
                 + "password TEXT NOT NULL,"
                 + "email TEXT,"
                 + "key TEXT,"
-                + "type INTEGER NOT NULL," // 1 = QS, 2 = Seller
+                + "type INTEGER NOT NULL," // 1 = QS, 2 = Admin
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
@@ -100,13 +100,14 @@ public class DBConnection {
                 } catch (SQLException ex) {
                     Logger.getLogger(DBConnection.class.getName())
                             .log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(DBConnection.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    }
                 }
-            }
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(DBConnection.class.getName())
-                        .log(Level.SEVERE, null, ex);
             }
         }
     }

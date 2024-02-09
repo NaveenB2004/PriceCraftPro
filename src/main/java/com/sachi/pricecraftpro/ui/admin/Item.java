@@ -1,4 +1,4 @@
-package com.sachi.pricecraftpro.ui.seller;
+package com.sachi.pricecraftpro.ui.admin;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.Home;

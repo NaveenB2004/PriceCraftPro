@@ -2,7 +2,7 @@ package com.sachi.pricecraftpro.ui;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.qs.Customer;
-import com.sachi.pricecraftpro.ui.seller.Item;
+import com.sachi.pricecraftpro.ui.admin.Item;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.sql.Connection;
@@ -113,7 +113,7 @@ public class LogIn extends javax.swing.JFrame {
 
         jComboBox1.setBackground(new java.awt.Color(0, 0, 0));
         jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select", "QS", "Seller" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select", "QS", "Admin" }));
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
