@@ -360,16 +360,24 @@ public class SignUp extends javax.swing.JFrame {
         if (jComboBox1.getSelectedItem() != null) {
             switch (jComboBox1.getSelectedIndex()) {
                 case 1 -> {
-                    jTextField3.setEnabled(true);
-                    jPasswordField2.setEnabled(true);
+                    jLabel7.setVisible(true);
+                    jTextField3.setVisible(true);
+                    jLabel8.setVisible(true);
+                    jPasswordField2.setVisible(true);
                 }
                 case 2 -> {
-                    jTextField3.setEnabled(false);
-                    jTextField3.setText("---");
-                    jPasswordField2.setEnabled(false);
-                    jPasswordField2.setText("---");
+                    jLabel7.setVisible(false);
+                    jTextField3.setVisible(false);
+                    jLabel8.setVisible(false);
+                    jPasswordField2.setVisible(false);
                 }
             }
+            
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jPasswordField2.setText("");
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
