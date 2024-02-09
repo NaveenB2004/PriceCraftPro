@@ -61,7 +61,6 @@ public class DBConnection {
                 "CREATE TABLE category("
                 + "id INTEGER NOT NULL,"
                 + "name TEXT NOT NULL,"
-                + "description TEXT,"
                 + "PRIMARY KEY (id)"
                 + ");",
                 //
