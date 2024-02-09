@@ -100,14 +100,13 @@ public class DBConnection {
                 } catch (SQLException ex) {
                     Logger.getLogger(DBConnection.class.getName())
                             .log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        conn.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(DBConnection.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    }
                 }
+            }
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBConnection.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
     }
