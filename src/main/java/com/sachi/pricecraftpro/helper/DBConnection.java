@@ -40,8 +40,8 @@ public class DBConnection {
                 + "name TEXT NOT NULL,"
                 + "username TEXT NOT NULL,"
                 + "password TEXT NOT NULL,"
-                + "email TEXT NOT NULL,"
-                + "key TEXT NOT NULL,"
+                + "email TEXT,"
+                + "key TEXT,"
                 + "type INTEGER NOT NULL," // 1 = QS, 2 = Seller
                 + "PRIMARY KEY (id)"
                 + ");",
