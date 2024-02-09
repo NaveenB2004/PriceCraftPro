@@ -26,18 +26,18 @@ public class Customer extends javax.swing.JFrame {
                 getClass().getResource("/icon.png")));
         startup();
     }
-    
+
     Connection conn = null;
     DefaultTableModel model = null;
-    
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         new Thread(() -> {
             model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
-            
+
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
@@ -67,7 +67,7 @@ public class Customer extends javax.swing.JFrame {
                             .log(Level.SEVERE, null, ex);
                 }
             }
-            
+
             l.dispose();
         }).start();
     }
@@ -330,12 +330,12 @@ public class Customer extends javax.swing.JFrame {
         String cusId = (String) model.getValueAt(jTable1.getSelectedRow(), 0);
         String name = (String) model.getValueAt(jTable1.getSelectedRow(), 1);
         String mail = (String) model.getValueAt(jTable1.getSelectedRow(), 2);
-        
+
         jButton5.setEnabled(true);
         jButton3.setEnabled(true);
         jButton2.setEnabled(true);
         jButton4.setEnabled(false);
-        
+
         jLabel4.setText(cusId);
         jTextField1.setText(name);
         jTextField2.setText(mail);
@@ -343,12 +343,12 @@ public class Customer extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jTable1.clearSelection();
-        
+
         jButton5.setEnabled(false);
         jButton3.setEnabled(false);
         jButton2.setEnabled(false);
         jButton4.setEnabled(true);
-        
+
         jTextField1.setText("");
         jTextField2.setText("");
         jLabel4.setText("---");
@@ -409,27 +409,31 @@ public class Customer extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        try {
-            conn = new DBConnection().CONN();
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO customer "
-                    + "(qs, name, email) VALUES "
-                    + "('" + LogIn.id + "', '" + jTextField1.getText() + "', "
-                    + "'" + jTextField2.getText() + "')");
-            startup();
-            jButton6ActionPerformed(evt);
-            JOptionPane.showMessageDialog(this, "Success!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error!");
-            Logger.getLogger(Customer.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        } finally {
+        if (jTextField1.getText().equals("") && jTextField2.getText().equals("")) {
             try {
-                conn.close();
+                conn = new DBConnection().CONN();
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("INSERT INTO customer "
+                        + "(qs, name, email) VALUES "
+                        + "('" + LogIn.id + "', '" + jTextField1.getText() + "', "
+                        + "'" + jTextField2.getText() + "')");
+                startup();
+                jButton6ActionPerformed(evt);
+                JOptionPane.showMessageDialog(this, "Success!");
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Customer.class.getName())
                         .log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Customer.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "All fields must be filled!");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
