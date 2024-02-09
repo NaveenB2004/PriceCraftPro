@@ -1,20 +1,15 @@
 package com.sachi.pricecraftpro.ui.seller;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
-import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
-import com.sachi.pricecraftpro.ui.LogIn;
 import com.sachi.pricecraftpro.ui.common.Settings;
-import jakarta.mail.MessagingException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -29,13 +24,10 @@ public class Item extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getResource("/icon.png")));
-        list = (DefaultTableModel) jTable2.getModel();
         startup();
     }
 
     Connection conn;
-    // add = 1, update = 2, delete = 3
-    DefaultTableModel list;
 
     private void startup() {
         Loading l = new Loading();
@@ -130,8 +122,6 @@ public class Item extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -165,17 +155,6 @@ public class Item extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "id", "status"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Seller Dashboard");
@@ -418,13 +397,6 @@ public class Item extends javax.swing.JFrame {
 
         jLabel9.setText("---");
 
-        jButton7.setText("Mail changes to QS");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -462,12 +434,9 @@ public class Item extends javax.swing.JFrame {
                             .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jButton6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4))
-                            .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -502,8 +471,7 @@ public class Item extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                        .addComponent(jButton7))
+                        .addGap(0, 103, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -714,30 +682,12 @@ public class Item extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
-                            + "FROM material");
-                    while (rs.next()) {
-                        if (rs.getInt(1) == 0) {
-                            Object[] row = {1, 1};
-                            list.addRow(row);
-                        } else {
-                            // todo bug fix
-                            Statement stmt1 = conn.createStatement();
-                            ResultSet rs1 = stmt1.executeQuery("SELECT id "
-                                    + "FROM material "
-                                    + "DESC LIMIT 1");
-                            while (rs1.next()) {
-                                Object[] row = {(rs1.getInt(1) + 1), 1};
-                                list.addRow(row);
-                            }
-                        }
-                        Statement stmt0 = conn.createStatement();
-                        stmt0.executeUpdate("INSERT INTO material "
-                                + "(name, price, category) VALUES "
-                                + "('" + jTextField3.getText() + "', "
-                                + "'" + jTextField4.getText() + "', "
-                                + "'" + jComboBox2.getSelectedIndex() + "')");
-                    }
+                    stmt.executeUpdate("INSERT INTO material "
+                            + "(name, price, category) VALUES "
+                            + "('" + jTextField3.getText() + "', "
+                            + "'" + jTextField4.getText() + "', "
+                            + "'" + jComboBox2.getSelectedIndex() + "')");
+
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -763,22 +713,6 @@ public class Item extends javax.swing.JFrame {
                             + "price = '" + jTextField4.getText() + "', "
                             + "category = '" + jComboBox2.getSelectedIndex() + "' "
                             + "WHERE id = '" + jLabel9.getText() + "'");
-
-                    boolean n = false;
-                    for (int i = 0; i < list.getRowCount(); i++) {
-                        System.out.println(i);
-                        if (list.getValueAt(i, 0).toString().equals(jLabel9.getText())
-                                && list.getValueAt(i, 1).toString().equals("2")
-                                || list.getValueAt(i, 0).toString().equals(jLabel9.getText())
-                                && list.getValueAt(i, 1).toString().equals("1")) {
-                            n = true;
-                        }
-                    }
-                    if (n == false) {
-                        Object[] row = {jLabel9.getText(), 2};
-                        list.addRow(row);
-                    }
-
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -799,20 +733,6 @@ public class Item extends javax.swing.JFrame {
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate("DELETE FROM material "
                             + "WHERE id = '" + jLabel9.getText() + "'");
-
-                    boolean n = false;
-                    for (int i = 0; i < list.getRowCount(); i++) {
-                        if (list.getValueAt(i, 0).toString().equals(jLabel9.getText())
-                                && list.getValueAt(i, 1).toString().equals("1")) {
-                            list.removeRow(i);
-                            n = true;
-                        }
-                    }
-                    if (n == false) {
-                        Object[] row = {jLabel9.getText(), 3};
-                        list.addRow(row);
-                    }
-
                     JOptionPane.showMessageDialog(this, "Success!");
                     startup();
                 } catch (SQLException ex) {
@@ -850,108 +770,6 @@ public class Item extends javax.swing.JFrame {
         jTextField4.setText(model.getValueAt(jTable1.getSelectedRow(), 2).toString());
         jComboBox2.setSelectedItem(model.getValueAt(jTable1.getSelectedRow(), 3));
     }//GEN-LAST:event_jTable1MouseClicked
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        Loading l = new Loading();
-        l.setVisible(true);
-
-        new Thread(() -> {
-            String body = null;
-            String[] login = new String[2];
-            try {
-                openConn();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name, email, key "
-                        + "FROM login "
-                        + "WHERE id = '" + LogIn.id + "'");
-                while (rs.next()) {
-                    body = "Seller Name : " + rs.getString(1) + "\n\n";
-                    login[0] = rs.getString(2);
-                    login[1] = rs.getString(3);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Item.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            } finally {
-                closeConn();
-            }
-
-            body += "Added items : \n";
-            for (int i = 0; i < list.getRowCount(); i++) {
-                if (list.getValueAt(i, 1).toString().equals("1")) {
-                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
-                }
-            }
-
-            body += "\nUpdated items : \n";
-            for (int i = 0; i < list.getRowCount(); i++) {
-                if (list.getValueAt(i, 1).toString().equals("2")) {
-                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
-                }
-            }
-
-            body += "\nDeleted items : \n";
-            for (int i = 0; i < list.getRowCount(); i++) {
-                if (list.getValueAt(i, 1).toString().equals("3")) {
-                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
-                }
-            }
-
-            try {
-                openConn();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT email "
-                        + "FROM login "
-                        + "WHERE type = 1");
-                while (rs.next()) {
-                    EmailSender email = new EmailSender();
-                    email.setFrom(login[0]);
-                    email.setKey(login[1]);
-                    email.setSubject("Material Updates");
-                    email.setBody(body);
-                    email.setTo(rs.getString(1));
-                    email.sendMail();
-                }
-                JOptionPane.showMessageDialog(this, "Success!");
-            } catch (SQLException | MessagingException ex) {
-                JOptionPane.showMessageDialog(this, "Error!");
-                Logger.getLogger(Item.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            } finally {
-                closeConn();
-            }
-
-            list.setRowCount(0);
-
-            l.dispose();
-        }).start();
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private String items(String id) {
-        try {
-            openConn();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT name, price, category "
-                    + "FROM material "
-                    + "WHERE id = '" + id + "'");
-            while (rs.next()) {
-                Statement stmt0 = conn.createStatement();
-                ResultSet rs0 = stmt0.executeQuery("SELECT name "
-                        + "FROM category "
-                        + "WHERE id = '" + rs.getString(3) + "'");
-                while (rs0.next()) {
-                    return rs.getString(1) + "\t" + rs.getString(2)
-                            + "\t" + rs0.getString(1);
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Item.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        } finally {
-            closeConn();
-        }
-        return null;
-    }
 
     /**
      * @param args the command line arguments
@@ -998,7 +816,6 @@ public class Item extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
@@ -1021,9 +838,7 @@ public class Item extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
