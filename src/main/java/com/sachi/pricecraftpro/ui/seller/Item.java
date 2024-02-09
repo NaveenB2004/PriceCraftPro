@@ -33,13 +33,13 @@ public class Item extends javax.swing.JFrame {
 
     Connection conn;
     // add = 1, update = 2, delete = 3
-    List<String> list;
+    DefaultTableModel list;
 
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
 
-        list = new ArrayList<>();
+        list = (DefaultTableModel) jTable2.getModel();
 
         new Thread(() -> {
             ActionEvent evt = null;
@@ -130,6 +130,8 @@ public class Item extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -164,6 +166,16 @@ public class Item extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "status"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Seller Dashboard");
@@ -706,7 +718,8 @@ public class Item extends javax.swing.JFrame {
                             + "FROM material");
                     while (rs.next()) {
                         if (rs.getInt(1) == 0) {
-                            list.add(1 + "-1");
+                            Object[] row = {1, 1};
+                            list.addRow(row);
                         } else {
                             // todo bug fix
                             Statement stmt1 = conn.createStatement();
@@ -714,7 +727,8 @@ public class Item extends javax.swing.JFrame {
                                     + "FROM material "
                                     + "DESC LIMIT 1");
                             while (rs1.next()) {
-                                list.add((rs1.getInt(1) + 1) + "-1");
+                                Object[] row = {(rs1.getInt(1) + 1), 1};
+                                list.addRow(row);
                             }
                         }
                         Statement stmt0 = conn.createStatement();
@@ -751,14 +765,17 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jLabel9.getText() + "'");
 
                     boolean n = false;
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).equals(jLabel9.getText() + "-2")
-                                || list.get(i).equals(jLabel9.getText() + "-1")) {
+                    for (int i = 0; i < list.getRowCount(); i++) {
+                        if (list.getValueAt(i, 0).toString().equals(jLabel9.getText())
+                                && list.getValueAt(i, 1).toString().equals("2")
+                                || list.getValueAt(i, 0).toString().equals(jLabel9.getText())
+                                && list.getValueAt(i, 1).toString().equals("1")) {
                             n = true;
                         }
                     }
                     if (n == false) {
-                        list.add(jLabel9.getText() + "-2");
+                        Object[] row = {jLabel9.getText(), 2};
+                        list.addRow(row);
                     }
 
                     JOptionPane.showMessageDialog(this, "Success!");
@@ -783,14 +800,16 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jLabel9.getText() + "'");
 
                     boolean n = false;
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).equals(jLabel9.getText() + "-1")) {
-                            list.remove(i);
+                    for (int i = 0; i < list.getRowCount(); i++) {
+                        if (list.getValueAt(i, 0).toString().equals(jLabel9.getText())
+                                && list.getValueAt(i, 1).toString().equals("1")) {
+                            list.removeRow(i);
                             n = true;
                         }
                     }
                     if (n == false) {
-                        list.add(jLabel9.getText() + "-3");
+                        Object[] row = {jLabel9.getText(), 3};
+                        list.addRow(row);
                     }
 
                     JOptionPane.showMessageDialog(this, "Success!");
@@ -856,32 +875,26 @@ public class Item extends javax.swing.JFrame {
                 closeConn();
             }
 
-            // todo bug fix
             body += "Added items : \n";
-            for (int i = 0; i < list.size(); i++) {
-                String[] item = list.get(i).split("-");
-                if (item[1].equals("1")) {
-                    body += "|- " + items(item[0]) + "\n";
+            for (int i = 0; i < list.getRowCount(); i++) {
+                if (list.getValueAt(i, 1).toString().equals("1")) {
+                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
                 }
             }
 
             body += "\nUpdated items : \n";
-            for (int i = 0; i < list.size(); i++) {
-                String[] item = list.get(i).split("-");
-                if (item[1].equals("2")) {
-                    body += "|- " + items(item[0]) + "\n";
+            for (int i = 0; i < list.getRowCount(); i++) {
+                if (list.getValueAt(i, 1).toString().equals("2")) {
+                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
                 }
             }
 
             body += "\nDeleted items : \n";
-            for (int i = 0; i < list.size(); i++) {
-                String[] item = list.get(i).split("-");
-                if (item[1].equals("3")) {
-                    body += "|- " + items(item[0]) + "\n";
+            for (int i = 0; i < list.getRowCount(); i++) {
+                if (list.getValueAt(i, 1).toString().equals("3")) {
+                    body += "|- " + items(list.getValueAt(i, 0).toString()) + "\n";
                 }
             }
-            
-            System.out.println(body);
 
             try {
                 openConn();
@@ -905,6 +918,8 @@ public class Item extends javax.swing.JFrame {
                 closeConn();
             }
 
+            list.setRowCount(0);
+            
             l.dispose();
         }).start();
     }//GEN-LAST:event_jButton7ActionPerformed
@@ -1003,7 +1018,9 @@ public class Item extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
