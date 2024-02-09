@@ -24,29 +24,29 @@ public class EmailSender {
 
     private String subject;
     private String body;
-    
+
     public void setTo(String to) {
         this.to = to;
     }
-    
+
     public void setFrom(String from) {
         this.from = from;
         this.username = from;
     }
-    
+
     public void setKey(String key) {
         this.password = key;
     }
-    
+
     public void setSubject(String subject) {
         this.subject = subject;
     }
-    
+
     public void setBody(String body) {
         this.body = body;
     }
 
-    public boolean sendMail() {
+    public void sendMail() throws AddressException, MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -60,35 +60,23 @@ public class EmailSender {
             }
         });
 
-        try {
-            // Create a default MimeMessage object.
-            Message message = new MimeMessage(session);
+        // Create a default MimeMessage object.
+        Message message = new MimeMessage(session);
 
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
+        // Set From: header field of the header.
+        message.setFrom(new InternetAddress(from));
 
-            // Set To: header field of the header.
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(to));
+        // Set To: header field of the header.
+        message.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(to));
 
-            // Set Subject: header field
-            message.setSubject(subject);
+        // Set Subject: header field
+        message.setSubject(subject);
 
-            // Now set the actual message
-            message.setText(body);
+        // Now set the actual message
+        message.setText(body);
 
-            // Send message
-            Transport.send(message);
-
-            return true;
-
-        } catch (AddressException ex) {
-            Logger.getLogger(EmailSender.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        } catch (MessagingException ex) {
-            Logger.getLogger(EmailSender.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
-        return false;
+        // Send message
+        Transport.send(message);
     }
 }

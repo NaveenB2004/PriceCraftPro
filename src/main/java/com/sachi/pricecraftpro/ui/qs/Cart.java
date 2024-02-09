@@ -4,6 +4,7 @@ import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
+import jakarta.mail.MessagingException;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
@@ -682,11 +683,16 @@ public class Cart extends javax.swing.JFrame {
 
             email.setSubject("Building estimate - " + jLabel4.getText());
             email.setBody(jTextArea1.getText());
-            boolean status = email.sendMail();
+            try {
+                email.sendMail();
+                JOptionPane.showMessageDialog(this, "Success!");
+            } catch (MessagingException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
 
             l.dispose();
-
-            JOptionPane.showMessageDialog(this, status ? "Success!" : "Error occurred!");
 
             panelOperations(true);
         }).start();

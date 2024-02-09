@@ -6,6 +6,7 @@ import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import com.sachi.pricecraftpro.ui.common.Settings;
+import jakarta.mail.MessagingException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
@@ -28,6 +29,7 @@ public class Item extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getResource("/icon.png")));
+        list = (DefaultTableModel) jTable2.getModel();
         startup();
     }
 
@@ -38,8 +40,6 @@ public class Item extends javax.swing.JFrame {
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-
-        list = (DefaultTableModel) jTable2.getModel();
 
         new Thread(() -> {
             ActionEvent evt = null;
@@ -766,6 +766,7 @@ public class Item extends javax.swing.JFrame {
 
                     boolean n = false;
                     for (int i = 0; i < list.getRowCount(); i++) {
+                        System.out.println(i);
                         if (list.getValueAt(i, 0).toString().equals(jLabel9.getText())
                                 && list.getValueAt(i, 1).toString().equals("2")
                                 || list.getValueAt(i, 0).toString().equals(jLabel9.getText())
@@ -911,7 +912,9 @@ public class Item extends javax.swing.JFrame {
                     email.setTo(rs.getString(1));
                     email.sendMail();
                 }
-            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Success!");
+            } catch (SQLException | MessagingException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
                 Logger.getLogger(Item.class.getName())
                         .log(Level.SEVERE, null, ex);
             } finally {
@@ -919,7 +922,7 @@ public class Item extends javax.swing.JFrame {
             }
 
             list.setRowCount(0);
-            
+
             l.dispose();
         }).start();
     }//GEN-LAST:event_jButton7ActionPerformed
