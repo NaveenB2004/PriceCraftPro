@@ -877,7 +877,7 @@ public class Cart extends javax.swing.JFrame {
                 model.setValueAt(Integer.parseInt(units) * price,
                         jTable3.getSelectedRow(), 3);
                 detailsWritter();
-                
+
                 unsaved = true;
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
@@ -968,6 +968,8 @@ public class Cart extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         checkUnsaved();
+        new Customer().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void checkUnsaved() {
@@ -979,8 +981,6 @@ public class Cart extends javax.swing.JFrame {
                 saveOperation();
             }
         }
-        new Customer().setVisible(true);
-        this.dispose();
     }
 
     /**
