@@ -83,6 +83,11 @@ public class SignUp extends javax.swing.JFrame {
         jComboBox1.setBackground(new java.awt.Color(0, 0, 0));
         jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select", "QS", "Seller" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Username : ");
 
@@ -309,14 +314,30 @@ public class SignUp extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private boolean validateFields() {
-        if (jComboBox1.getSelectedIndex() == 0
-                || jTextField1.getText().equals("")
-                || jPasswordField1.getPassword() == null
-                || jTextField2.getText().equals("")
-                || jTextField3.getText().equals("")
-                || String.valueOf(jPasswordField2.getPassword()).equals("")) {
-            JOptionPane.showMessageDialog(this, "Invalid sign-up details! Try again!");
+        if (jComboBox1.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+            "Invalid sign-up details! Try again!");
             return false;
+        }
+        if (jComboBox1.getSelectedIndex() == 1) {
+            if (jTextField1.getText().equals("")
+                    || jPasswordField1.getPassword() == null
+                    || jTextField2.getText().equals("")
+                    || jTextField3.getText().equals("")
+                    || String.valueOf(jPasswordField2.getPassword()).equals("")) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid sign-up details! Try again!");
+                return false;
+            }
+        }
+        if (jComboBox1.getSelectedIndex() == 2) {
+            if (jTextField1.getText().equals("")
+                    || jPasswordField1.getPassword() == null
+                    || jTextField2.getText().equals("")) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid sign-up details! Try again!");
+                return false;
+            }
         }
 
         return true;
@@ -334,6 +355,23 @@ public class SignUp extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         this.setExtendedState(ICONIFIED);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        if (jComboBox1.getSelectedItem() != null) {
+            switch (jComboBox1.getSelectedIndex()) {
+                case 1 -> {
+                    jTextField3.setEnabled(true);
+                    jPasswordField2.setEnabled(true);
+                }
+                case 2 -> {
+                    jTextField3.setEnabled(false);
+                    jTextField3.setText("");
+                    jPasswordField2.setEnabled(false);
+                    jPasswordField2.setText("");
+                }
+            }
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
