@@ -365,9 +365,9 @@ public class SignUp extends javax.swing.JFrame {
                 }
                 case 2 -> {
                     jTextField3.setEnabled(false);
-                    jTextField3.setText("");
+                    jTextField3.setText("---");
                     jPasswordField2.setEnabled(false);
-                    jPasswordField2.setText("");
+                    jPasswordField2.setText("---");
                 }
             }
         }
