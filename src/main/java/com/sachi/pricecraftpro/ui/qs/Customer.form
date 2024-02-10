@@ -336,7 +336,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="jButton5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Estimate Editor"/>
+            <Property name="text" type="java.lang.String" value="Estimates Editor"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
