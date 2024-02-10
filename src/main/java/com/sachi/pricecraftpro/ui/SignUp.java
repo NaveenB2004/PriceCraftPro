@@ -2,7 +2,12 @@ package com.sachi.pricecraftpro.ui;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -200,6 +205,11 @@ public class SignUp extends javax.swing.JFrame {
 
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton4.setText("!");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -390,6 +400,30 @@ public class SignUp extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        int reply = JOptionPane.showConfirmDialog(this,
+                "Your email account must be a Google Email (Gmail) account.\n"
+                + "01. To get a key goto Google two-step-verification panel.\n"
+                + "02. Turn on 2-step verification and add an app password.\n"
+                + "03. Copy the generated key ad paste it here!\n\n"
+                + "Generate key now?",
+                "Email Key",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+        if (reply == JOptionPane.YES_OPTION) {
+            String url = "https://myaccount.google.com/signinoptions/two-step-verification";
+            try {
+                Desktop.getDesktop().browse(new URL(url).toURI());
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Logger.getLogger(SignUp.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(SignUp.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
