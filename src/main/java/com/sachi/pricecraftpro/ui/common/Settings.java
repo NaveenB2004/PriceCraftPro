@@ -2,6 +2,7 @@ package com.sachi.pricecraftpro.ui.common;
 
 import com.sachi.pricecraftpro.helper.DBConnection;
 import com.sachi.pricecraftpro.ui.LogIn;
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,9 +21,41 @@ public class Settings extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getResource("/icon.png")));
+        startup();
     }
-
+    
     Connection conn;
+    
+    private void startup() {
+        try {
+            conn = new DBConnection().CONN();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name, email, type "
+                    + "FROM login "
+                    + "WHERE id = '" + LogIn.id + "'");
+            while (rs.next()) {
+                jTextField1.setText(rs.getString(1));
+                jTextField2.setText(rs.getString(2));
+                if (rs.getInt(3) == 2) {
+                    for (Component c : jPanel3.getComponents()) {
+                        c.setEnabled(false);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Settings.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Settings.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

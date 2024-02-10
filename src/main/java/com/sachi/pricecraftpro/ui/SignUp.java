@@ -261,7 +261,6 @@ public class SignUp extends javax.swing.JFrame {
         loading.setVisible(true);
 
         new Thread(() -> {
-
             if (validateFields()) {
                 try {
                     conn = new DBConnection().CONN();
@@ -280,8 +279,15 @@ public class SignUp extends javax.swing.JFrame {
                                     + "'" + jComboBox1.getSelectedIndex() + "', "
                                     + "'" + jTextField3.getText() + "', "
                                     + "'" + String.valueOf(jPasswordField2.getPassword()) + "')");
+                            
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
                                     + "Go back to Login.");
+                            
+                            jTextField1.setText("");
+                            jPasswordField1.setText("");
+                            jTextField2.setText("");
+                            jTextField3.setText("");
+                            jPasswordField2.setText("");
                         } else {
                             JOptionPane.showMessageDialog(this,
                                     "Username already exists! Try again!");
@@ -316,7 +322,7 @@ public class SignUp extends javax.swing.JFrame {
     private boolean validateFields() {
         if (jComboBox1.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(this,
-            "Invalid sign-up details! Try again!");
+                    "Invalid sign-up details! Try again!");
             return false;
         }
         if (jComboBox1.getSelectedIndex() == 1) {
@@ -372,12 +378,6 @@ public class SignUp extends javax.swing.JFrame {
                     jPasswordField2.setVisible(false);
                 }
             }
-            
-            jTextField1.setText("");
-            jPasswordField1.setText("");
-            jTextField2.setText("");
-            jTextField3.setText("");
-            jPasswordField2.setText("");
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 

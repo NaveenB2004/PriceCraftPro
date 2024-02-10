@@ -15,7 +15,7 @@ public class PriceCraftPro {
         s.setVisible(true);
         DBConnection.checkDb();
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException ex) {
             Logger.getLogger(PriceCraftPro.class.getName())
                     .log(Level.SEVERE, null, ex);

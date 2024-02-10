@@ -5,7 +5,6 @@ import com.sachi.pricecraftpro.ui.Home;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.common.Settings;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,34 +33,7 @@ public class Item extends javax.swing.JFrame {
         l.setVisible(true);
 
         new Thread(() -> {
-            ActionEvent evt = null;
-            jButton5ActionPerformed(evt);
-            jButton6ActionPerformed(evt);
-
-            jComboBox1.removeAllItems();
-            jComboBox2.removeAllItems();
-            jComboBox3.removeAllItems();
-
-            jComboBox1.addItem("Please Select");
-            jComboBox2.addItem("Please Select");
-            jComboBox3.addItem("All");
-
-            try {
-                openConn();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name "
-                        + "FROM category");
-                while (rs.next()) {
-                    jComboBox1.addItem(rs.getString(1));
-                    jComboBox2.addItem(rs.getString(1));
-                    jComboBox3.addItem(rs.getString(1));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Item.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            } finally {
-                closeConn();
-            }
+            fillCategoryCombo();
 
             fillTable();
 
@@ -69,9 +41,37 @@ public class Item extends javax.swing.JFrame {
         }).start();
     }
 
+    private void fillCategoryCombo() {
+        jComboBox1.removeAllItems();
+        jComboBox2.removeAllItems();
+        jComboBox3.removeAllItems();
+
+        jComboBox1.addItem("Please Select");
+        jComboBox2.addItem("Please Select");
+        jComboBox3.addItem("All");
+
+        try {
+            openConn();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name "
+                    + "FROM category");
+            while (rs.next()) {
+                jComboBox1.addItem(rs.getString(1));
+                jComboBox2.addItem(rs.getString(1));
+                jComboBox3.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Item.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            closeConn();
+        }
+    }
+
     private void fillTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
+
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -509,7 +509,12 @@ public class Item extends javax.swing.JFrame {
         jRadioButton3.setSelected(false);
 
         jComboBox1.setSelectedIndex(0);
+        jComboBox1.setEnabled(false);
         jTextField1.setText("");
+        jTextField1.setEnabled(false);
+
+        jButton3.setEnabled(false);
+        jButton5.setEnabled(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -519,28 +524,39 @@ public class Item extends javax.swing.JFrame {
 
         jLabel9.setText("---");
         jTextField3.setText("");
+        jTextField3.setEnabled(false);
         jTextField4.setText("");
+        jTextField4.setEnabled(false);
         jComboBox2.setSelectedIndex(0);
+        jComboBox2.setEnabled(false);
+
+        jButton4.setEnabled(false);
+        jButton6.setEnabled(false);
 
         jTable1.clearSelection();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        jButton5ActionPerformed(evt);
-        jRadioButton1.setSelected(true);
+        jComboBox1.setSelectedIndex(0);
         jComboBox1.setEnabled(false);
+        jTextField1.setEnabled(true);
+        jButton3.setEnabled(true);
+        jButton5.setEnabled(true);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        jButton5ActionPerformed(evt);
-        jRadioButton2.setSelected(true);
         jComboBox1.setEnabled(true);
+        jTextField1.setEnabled(true);
+        jButton3.setEnabled(true);
+        jButton5.setEnabled(true);
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        jButton5ActionPerformed(evt);
-        jRadioButton3.setSelected(true);
         jComboBox1.setEnabled(true);
+        jTextField1.setText("");
+        jTextField1.setEnabled(false);
+        jButton3.setEnabled(true);
+        jButton5.setEnabled(true);
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -553,7 +569,7 @@ public class Item extends javax.swing.JFrame {
                             + "(name) VALUES "
                             + "('" + jTextField1.getText() + "')");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    fillCategoryCombo();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -575,7 +591,7 @@ public class Item extends javax.swing.JFrame {
                             + "SET name = '" + jTextField1.getText() + "', "
                             + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    fillCategoryCombo();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -595,7 +611,7 @@ public class Item extends javax.swing.JFrame {
                     stmt.executeUpdate("DELETE FROM category "
                             + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    fillCategoryCombo();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -612,21 +628,7 @@ public class Item extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (jComboBox1.getSelectedItem() != null
                 && jComboBox1.getSelectedIndex() != 0) {
-            try {
-                openConn();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name "
-                        + "FROM category "
-                        + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
-                while (rs.next()) {
-                    jTextField1.setText(rs.getString(1));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Item.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            } finally {
-                closeConn();
-            }
+            jTextField1.setText(jComboBox1.getSelectedItem().toString());
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
@@ -673,7 +675,8 @@ public class Item extends javax.swing.JFrame {
                             + "'" + jComboBox2.getSelectedIndex() + "')");
 
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    jButton6ActionPerformed(evt);
+                    fillTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -698,7 +701,8 @@ public class Item extends javax.swing.JFrame {
                             + "category = '" + jComboBox2.getSelectedIndex() + "' "
                             + "WHERE id = '" + jLabel9.getText() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    jButton6ActionPerformed(evt);
+                    fillTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -707,7 +711,8 @@ public class Item extends javax.swing.JFrame {
                     closeConn();
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid selection or empty field!");
+                JOptionPane.showMessageDialog(this,
+                        "Invalid selection or empty field!");
             }
         }
         if (jRadioButton6.isSelected()) {
@@ -718,7 +723,8 @@ public class Item extends javax.swing.JFrame {
                     stmt.executeUpdate("DELETE FROM material "
                             + "WHERE id = '" + jLabel9.getText() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    startup();
+                    jButton6ActionPerformed(evt);
+                    fillTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -733,26 +739,41 @@ public class Item extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
-        jButton6ActionPerformed(evt);
-        jRadioButton4.setSelected(true);
+        jLabel9.setText("---");
+        jTextField3.setEnabled(true);
+        jTextField4.setEnabled(true);
+        jComboBox2.setEnabled(true);
+        jButton6.setEnabled(true);
+        jButton4.setEnabled(true);
+        jTable1.clearSelection();
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
-        jButton6ActionPerformed(evt);
-        jRadioButton5.setSelected(true);
+        jTextField3.setEnabled(true);
+        jTextField4.setEnabled(true);
+        jComboBox2.setEnabled(true);
+        jButton6.setEnabled(true);
+        jButton4.setEnabled(true);
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
-        jButton6ActionPerformed(evt);
-        jRadioButton6.setSelected(true);
+        jTextField3.setEnabled(false);
+        jTextField4.setEnabled(false);
+        jComboBox2.setEnabled(false);
+        jButton6.setEnabled(true);
+        jButton4.setEnabled(true);
     }//GEN-LAST:event_jRadioButton6ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        jLabel9.setText(model.getValueAt(jTable1.getSelectedRow(), 0).toString());
-        jTextField3.setText(model.getValueAt(jTable1.getSelectedRow(), 1).toString());
-        jTextField4.setText(model.getValueAt(jTable1.getSelectedRow(), 2).toString());
-        jComboBox2.setSelectedItem(model.getValueAt(jTable1.getSelectedRow(), 3));
+        jLabel9.setText(model.getValueAt(
+                jTable1.getSelectedRow(), 0).toString());
+        jTextField3.setText(model.getValueAt(
+                jTable1.getSelectedRow(), 1).toString());
+        jTextField4.setText(model.getValueAt(
+                jTable1.getSelectedRow(), 2).toString());
+        jComboBox2.setSelectedItem(model.getValueAt(
+                jTable1.getSelectedRow(), 3));
     }//GEN-LAST:event_jTable1MouseClicked
 
     /**
