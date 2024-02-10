@@ -351,7 +351,6 @@ public class Cart extends javax.swing.JFrame {
                 } finally {
                     closeConn();
                 }
-
             } else {
                 JOptionPane.showMessageDialog(this, "Nothing to save!");
             }
@@ -915,7 +914,7 @@ public class Cart extends javax.swing.JFrame {
         jButton5.setEnabled(false);
         jButton2.setEnabled(false);
 
-        unsaved = true;
+        unsaved = jTable3.getRowCount() != 0;
 
         detailsWritter();
     }//GEN-LAST:event_jButton5ActionPerformed
