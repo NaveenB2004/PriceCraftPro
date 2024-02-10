@@ -41,6 +41,44 @@ public class SignUp extends javax.swing.JFrame {
                 .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
     }
 
+    private boolean validateFields() {
+        if (jComboBox1.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid sign-up details! Try again!");
+            return false;
+        }
+        if (jComboBox1.getSelectedIndex() == 1) {
+            if (jTextField1.getText().equals("")
+                    || jPasswordField1.getPassword() == null
+                    || jTextField2.getText().equals("")
+                    || jTextField3.getText().equals("")
+                    || String.valueOf(jPasswordField2.getPassword()).equals("")) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid sign-up details! Try again!");
+                return false;
+            }
+        }
+        if (jComboBox1.getSelectedIndex() == 2) {
+            if (jTextField1.getText().equals("")
+                    || jPasswordField1.getPassword() == null
+                    || jTextField2.getText().equals("")) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid sign-up details! Try again!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void uiActions(boolean operation) {
+        jLabel7.setVisible(operation);
+        jTextField3.setVisible(operation);
+        jLabel8.setVisible(operation);
+        jPasswordField2.setVisible(operation);
+        jButton4.setVisible(operation);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -69,6 +107,7 @@ public class SignUp extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sign Up");
@@ -159,6 +198,9 @@ public class SignUp extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Sign Up");
 
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setText("!");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -179,12 +221,15 @@ public class SignUp extends javax.swing.JFrame {
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPasswordField2)
                                     .addComponent(jComboBox1, 0, 180, Short.MAX_VALUE)
                                     .addComponent(jPasswordField1)
                                     .addComponent(jTextField1)
                                     .addComponent(jTextField2)
-                                    .addComponent(jTextField3)))
+                                    .addComponent(jTextField3)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jPasswordField2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton4))))
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -227,7 +272,8 @@ public class SignUp extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -279,10 +325,10 @@ public class SignUp extends javax.swing.JFrame {
                                     + "'" + jComboBox1.getSelectedIndex() + "', "
                                     + "'" + jTextField3.getText() + "', "
                                     + "'" + String.valueOf(jPasswordField2.getPassword()) + "')");
-                            
+
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
                                     + "Go back to Login.");
-                            
+
                             jTextField1.setText("");
                             jPasswordField1.setText("");
                             jTextField2.setText("");
@@ -319,36 +365,6 @@ public class SignUp extends javax.swing.JFrame {
         }).start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private boolean validateFields() {
-        if (jComboBox1.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(this,
-                    "Invalid sign-up details! Try again!");
-            return false;
-        }
-        if (jComboBox1.getSelectedIndex() == 1) {
-            if (jTextField1.getText().equals("")
-                    || jPasswordField1.getPassword() == null
-                    || jTextField2.getText().equals("")
-                    || jTextField3.getText().equals("")
-                    || String.valueOf(jPasswordField2.getPassword()).equals("")) {
-                JOptionPane.showMessageDialog(this,
-                        "Invalid sign-up details! Try again!");
-                return false;
-            }
-        }
-        if (jComboBox1.getSelectedIndex() == 2) {
-            if (jTextField1.getText().equals("")
-                    || jPasswordField1.getPassword() == null
-                    || jTextField2.getText().equals("")) {
-                JOptionPane.showMessageDialog(this,
-                        "Invalid sign-up details! Try again!");
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         new LogIn().setVisible(true);
         this.dispose();
@@ -366,16 +382,10 @@ public class SignUp extends javax.swing.JFrame {
         if (jComboBox1.getSelectedItem() != null) {
             switch (jComboBox1.getSelectedIndex()) {
                 case 1 -> {
-                    jLabel7.setVisible(true);
-                    jTextField3.setVisible(true);
-                    jLabel8.setVisible(true);
-                    jPasswordField2.setVisible(true);
+                    uiActions(true);
                 }
                 case 2 -> {
-                    jLabel7.setVisible(false);
-                    jTextField3.setVisible(false);
-                    jLabel8.setVisible(false);
-                    jPasswordField2.setVisible(false);
+                    uiActions(false);
                 }
             }
         }
@@ -420,6 +430,7 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
