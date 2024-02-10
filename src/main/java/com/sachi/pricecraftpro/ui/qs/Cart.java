@@ -5,7 +5,6 @@ import com.sachi.pricecraftpro.helper.EmailSender;
 import com.sachi.pricecraftpro.ui.Loading;
 import com.sachi.pricecraftpro.ui.LogIn;
 import jakarta.mail.MessagingException;
-import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -140,12 +139,10 @@ public class Cart extends javax.swing.JFrame {
     }
 
     private void panelOperations(boolean option) {
-        for (Component com : jPanel1.getComponents()) {
-            com.setEnabled(option);
-        }
-        jButton3.setEnabled(option);
         jButton1.setEnabled(option);
+        jButton3.setEnabled(option);
 
+        jButton2.setEnabled(false);
         jButton4.setEnabled(false);
         jButton5.setEnabled(false);
     }
@@ -252,6 +249,131 @@ public class Cart extends javax.swing.JFrame {
         }).start();
     }
 
+    private void filter(int filter) {
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0);
+        if (filter == 0) {
+            if (jComboBox1.getSelectedIndex() == 0) {
+                firstTableFill();
+            } else {
+                try {
+                    openConn();
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT * "
+                            + "FROM material "
+                            + "WHERE category = '" + jComboBox1.getSelectedIndex() + "'");
+                    while (rs0.next()) {
+                        Object[] row = {rs0.getString(1),
+                            rs0.getString(2), rs0.getString(3),
+                            jComboBox1.getSelectedItem().toString()};
+                        model.addRow(row);
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            }
+        } else {
+            if (jTextField1.getText().equals("")) {
+                firstTableFill();
+            } else {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT * "
+                            + "FROM material "
+                            + "WHERE name LIKE '" + jTextField1.getText() + "%'");
+                    while (rs.next()) {
+                        Statement stmt0 = conn.createStatement();
+                        ResultSet rs0 = stmt0.executeQuery("SELECT name "
+                                + "FROM category "
+                                + "WHERE id = '" + rs.getString(4) + "'");
+                        while (rs0.next()) {
+                            Object[] row = {rs.getString(1), rs.getString(2),
+                                rs.getString(3), rs0.getString(1)};
+                            model.addRow(row);
+                        }
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            }
+        }
+    }
+
+    private void saveOperation() {
+        Loading l = new Loading();
+        l.setVisible(true);
+
+        new Thread(() -> {
+            panelOperations(false);
+            jMenuBar1.setEnabled(false);
+
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            if (model.getRowCount() != 0) {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("DELETE FROM cart "
+                            + "WHERE plan = '" + jLabel4.getText() + "'");
+                } catch (SQLException ex) {
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+
+                try {
+                    openConn();
+                    for (int j = 0; j < model.getRowCount(); j++) {
+                        Statement stmt = conn.createStatement();
+                        stmt.executeUpdate("INSERT INTO cart "
+                                + "(customer, material, units, plan) "
+                                + "VALUES "
+                                + "('" + id + "', "
+                                + "'" + model.getValueAt(j, 0).toString() + "', "
+                                + "'" + model.getValueAt(j, 2).toString() + "', "
+                                + "'" + jLabel4.getText() + "')");
+                    }
+                    unsaved = false;
+                    JOptionPane.showMessageDialog(this, "Success!");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Nothing to save!");
+            }
+
+            l.dispose();
+
+            panelOperations(true);
+            jMenuBar1.setEnabled(true);
+        }).start();
+    }
+
+    private void checkUnsaved() {
+        if (unsaved) {
+            int reply = JOptionPane.showConfirmDialog(this,
+                    "You have unsaved works. Save now?",
+                    "Save", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                saveOperation();
+            }
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -273,6 +395,7 @@ public class Cart extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -389,10 +512,16 @@ public class Cart extends javax.swing.JFrame {
         });
 
         jButton2.setText("Edit units");
-        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Clear");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
             }
         });
 
@@ -406,7 +535,9 @@ public class Cart extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1))
+                        .addComponent(jTextField1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -438,7 +569,8 @@ public class Cart extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton6))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -645,6 +777,7 @@ public class Cart extends javax.swing.JFrame {
         Loading l = new Loading();
         l.setVisible(true);
         panelOperations(false);
+        jMenuBar1.setEnabled(false);
 
         new Thread(() -> {
             EmailSender email = new EmailSender();
@@ -698,6 +831,7 @@ public class Cart extends javax.swing.JFrame {
             l.dispose();
 
             panelOperations(true);
+            jMenuBar1.setEnabled(true);
         }).start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
@@ -717,9 +851,9 @@ public class Cart extends javax.swing.JFrame {
                     stmt0.executeUpdate("UPDATE cart "
                             + "SET plan = '" + name + "' "
                             + "WHERE plan = '" + jLabel4.getText() + "'");
+                    jLabel4.setText(name);
                     JOptionPane.showMessageDialog(this,
-                            "Success! Please select the plan to continue!");
-                    startup();
+                            "Success!");
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Name already in use. Please use another.");
@@ -733,72 +867,6 @@ public class Cart extends javax.swing.JFrame {
             closeConn();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void filter(int filter) {
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setRowCount(0);
-        if (filter == 0) {
-            if (jComboBox1.getSelectedIndex() == 0) {
-                firstTableFill();
-            } else {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id "
-                            + "FROM category "
-                            + "WHERE name = '"
-                            + jComboBox1.getSelectedItem().toString() + "'");
-                    while (rs.next()) {
-                        Statement stmt0 = conn.createStatement();
-                        ResultSet rs0 = stmt0.executeQuery("SELECT * "
-                                + "FROM material "
-                                + "WHERE category = '" + rs.getString(1) + "'");
-                        while (rs0.next()) {
-                            Object[] row = {rs0.getString(1),
-                                rs0.getString(2), rs0.getString(3),
-                                jComboBox1.getSelectedItem().toString()};
-                            model.addRow(row);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-            }
-        } else {
-            if (jTextField1.getText().equals("")) {
-                firstTableFill();
-            } else {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT * "
-                            + "FROM material "
-                            + "WHERE name LIKE '" + jTextField1.getText() + "%'");
-                    while (rs.next()) {
-                        Statement stmt0 = conn.createStatement();
-                        ResultSet rs0 = stmt0.executeQuery("SELECT name "
-                                + "FROM category "
-                                + "WHERE id = '" + rs.getString(4) + "'");
-                        while (rs0.next()) {
-                            Object[] row = {rs.getString(1), rs.getString(2),
-                                rs.getString(3), rs0.getString(1)};
-                            model.addRow(row);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-            }
-        }
-    }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         DefaultTableModel model0 = (DefaultTableModel) jTable2.getModel();
@@ -853,8 +921,8 @@ public class Cart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        filter(1);
         jComboBox1.setSelectedIndex(0);
+        filter(1);
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -877,9 +945,10 @@ public class Cart extends javax.swing.JFrame {
                 model.setValueAt(units, jTable3.getSelectedRow(), 2);
                 model.setValueAt(Integer.parseInt(units) * price,
                         jTable3.getSelectedRow(), 3);
-                detailsWritter();
 
                 unsaved = true;
+
+                detailsWritter();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid value!");
             }
@@ -894,70 +963,20 @@ public class Cart extends javax.swing.JFrame {
         saveOperation();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void saveOperation() {
-        Loading l = new Loading();
-        l.setVisible(true);
-
-        new Thread(() -> {
-            panelOperations(false);
-
-            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-            if (model.getRowCount() != 0) {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    stmt.executeUpdate("DELETE FROM cart "
-                            + "WHERE plan = '" + jLabel4.getText() + "'");
-                } catch (SQLException ex) {
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-
-                try {
-                    openConn();
-                    for (int j = 0; j < model.getRowCount(); j++) {
-                        Statement stmt = conn.createStatement();
-                        stmt.executeUpdate("INSERT INTO cart "
-                                + "(customer, material, units, plan) "
-                                + "VALUES "
-                                + "('" + id + "', "
-                                + "'" + model.getValueAt(j, 0).toString() + "', "
-                                + "'" + model.getValueAt(j, 2).toString() + "', "
-                                + "'" + jLabel4.getText() + "')");
-                    }
-                    unsaved = false;
-                    JOptionPane.showMessageDialog(this, "Success!");
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Nothing to save!");
-            }
-
-            l.dispose();
-            panelOperations(true);
-        }).start();
-    }
-
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (jComboBox1.getSelectedItem() != null) {
-            filter(0);
             jTextField1.setText("");
+            filter(0);
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        jButton4.setEnabled(true);
-        jButton5.setEnabled(false);
-        jButton2.setEnabled(false);
-        jTable3.clearSelection();
+        if (!jLabel4.getText().equals("---")) {
+            jButton4.setEnabled(true);
+            jButton5.setEnabled(false);
+            jButton2.setEnabled(false);
+            jTable3.clearSelection();
+        }
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
@@ -973,16 +992,11 @@ public class Cart extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void checkUnsaved() {
-        if (unsaved) {
-            int reply = JOptionPane.showConfirmDialog(this,
-                    "You have unsaved works. Save now?",
-                    "Save", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION) {
-                saveOperation();
-            }
-        }
-    }
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        jComboBox1.setSelectedIndex(0);
+        jTextArea1.setText("");
+        firstTableFill();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1026,6 +1040,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
