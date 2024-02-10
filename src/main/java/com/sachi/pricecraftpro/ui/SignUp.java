@@ -279,7 +279,7 @@ public class SignUp extends javax.swing.JFrame {
                                     + "'" + String.valueOf(jPasswordField1.getPassword()) + "', "
                                     + "'" + jComboBox1.getSelectedIndex() + "', "
                                     + "'" + jTextField3.getText() + "', "
-                                    + "'" + String.valueOf(jPasswordField2.getPassword()) + "');");
+                                    + "'" + String.valueOf(jPasswordField2.getPassword()) + "')");
                             JOptionPane.showMessageDialog(this, "Registration success!\n"
                                     + "Go back to Login.");
                         } else {

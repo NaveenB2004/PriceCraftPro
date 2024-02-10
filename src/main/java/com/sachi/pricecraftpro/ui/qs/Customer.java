@@ -409,7 +409,7 @@ public class Customer extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (jTextField1.getText().equals("") && jTextField2.getText().equals("")) {
+        if (!jTextField1.getText().equals("") && !jTextField2.getText().equals("")) {
             try {
                 conn = new DBConnection().CONN();
                 Statement stmt = conn.createStatement();
