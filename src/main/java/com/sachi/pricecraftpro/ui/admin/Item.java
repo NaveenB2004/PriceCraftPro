@@ -110,6 +110,13 @@ public class Item extends javax.swing.JFrame {
             }
         }
     }
+    
+    private void clearMaterial() {
+        jLabel9.setText("---");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jComboBox2.setSelectedIndex(0);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -579,6 +586,9 @@ public class Item extends javax.swing.JFrame {
                             + "('" + jTextField1.getText() + "')");
                     JOptionPane.showMessageDialog(this, "Success!");
                     fillCategoryCombo();
+
+                    jComboBox1.setSelectedIndex(0);
+                    jTextField1.setText("");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -601,6 +611,9 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
                     fillCategoryCombo();
+
+                    jComboBox1.setSelectedIndex(0);
+                    jTextField1.setText("");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -621,6 +634,9 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE id = '" + jComboBox1.getSelectedIndex() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
                     fillCategoryCombo();
+
+                    jComboBox1.setSelectedIndex(0);
+                    jTextField1.setText("");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -684,8 +700,8 @@ public class Item extends javax.swing.JFrame {
                             + "'" + jComboBox2.getSelectedIndex() + "')");
 
                     JOptionPane.showMessageDialog(this, "Success!");
-                    jButton6ActionPerformed(evt);
                     fillTable();
+                    clearMaterial();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -710,7 +726,6 @@ public class Item extends javax.swing.JFrame {
                             + "category = '" + jComboBox2.getSelectedIndex() + "' "
                             + "WHERE id = '" + jLabel9.getText() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
-                    jButton6ActionPerformed(evt);
                     fillTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
