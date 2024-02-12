@@ -189,6 +189,8 @@ public class Cart extends javax.swing.JFrame {
                 closeConn();
             }
 
+            jMenuItem2.setEnabled(true);
+
             detailsWritter();
             panelOperations(true);
 
@@ -683,6 +685,7 @@ public class Cart extends javax.swing.JFrame {
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mail_FILL0_wght200_GRAD0_opsz20.png"))); // NOI18N
         jMenuItem2.setText("Email to customer");
+        jMenuItem2.setEnabled(false);
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -763,6 +766,7 @@ public class Cart extends javax.swing.JFrame {
                     model.setRowCount(0);
                     jTextArea1.setText("");
                     panelOperations(true);
+                    jMenuItem2.setEnabled(true);
                     JOptionPane.showMessageDialog(this, "Success!");
                 }
             }
