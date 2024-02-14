@@ -230,19 +230,27 @@ public class Cart extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         double subTotal = 0d;
         for (int k = 1; k < jComboBox1.getItemCount(); k++) {
-            details += jComboBox1.getItemAt(k) + " : \n";
+            boolean itemStatus = false;
             double categoryTotal = 0d;
             for (int j = 0; j < model.getRowCount(); j++) {
-                if (model.getValueAt(j, 4).equals(jComboBox1.getItemAt(k))) {
-                    details += "|- " + model.getValueAt(j, 1) + "\t["
-                            + model.getValueAt(j, 2)
-                            + "]\t" + df.format(Double.parseDouble(model
-                                    .getValueAt(j, 3).toString())) + "\n";
-                    categoryTotal += Double.parseDouble(model.getValueAt(j, 3)
-                            .toString());
+                if (jComboBox1.getItemAt(k).equals(model.getValueAt(j, 4))) {
+                    itemStatus = true;
                 }
             }
-            details += "[Total : " + df.format(categoryTotal) + "]\n\n";
+            if (itemStatus) {
+                details += jComboBox1.getItemAt(k) + " : \n";
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    if (model.getValueAt(j, 4).equals(jComboBox1.getItemAt(k))) {
+                        details += "|- " + model.getValueAt(j, 1) + "\t["
+                                + model.getValueAt(j, 2)
+                                + "]\t" + df.format(Double.parseDouble(model
+                                        .getValueAt(j, 3).toString())) + "\n";
+                        categoryTotal += Double.parseDouble(model.getValueAt(j, 3)
+                                .toString());
+                    }
+                }
+                details += "[Total : " + df.format(categoryTotal) + "]\n\n";
+            }
             subTotal += categoryTotal;
         }
         details += "[Sub Total : " + df.format(subTotal) + "]";
