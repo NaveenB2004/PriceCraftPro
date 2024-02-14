@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -82,7 +83,8 @@ public class Cart extends javax.swing.JFrame {
         try {
             openConn();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * "
+            ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                    + "printf('%.2f', price) , category "
                     + "FROM material");
             while (rs.next()) {
                 Statement stmt0 = conn.createStatement();
@@ -165,7 +167,8 @@ public class Cart extends javax.swing.JFrame {
                         + "AND plan = '" + itemName + "'");
                 while (rs.next()) {
                     Statement stmt0 = conn.createStatement();
-                    ResultSet rs0 = stmt0.executeQuery("SELECT id, name, price, category "
+                    ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
+                            + "printf('%.2f', price), category "
                             + "FROM material "
                             + "WHERE id = '" + rs.getString(1) + "'");
                     while (rs0.next()) {
@@ -175,7 +178,7 @@ public class Cart extends javax.swing.JFrame {
                                 + "WHERE id = '" + rs0.getString(4) + "'");
                         while (rs1.next()) {
                             Object[] row = {rs0.getString(1), rs0.getString(2),
-                                rs.getString(2), rs.getInt(2) * rs0.getInt(3),
+                                rs.getString(2), rs.getInt(2) * rs0.getDouble(3),
                                 rs1.getString(1)};
                             model.addRow(row);
                         }
@@ -222,23 +225,24 @@ public class Cart extends javax.swing.JFrame {
         details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
 
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        int subTotal = 0;
+        DecimalFormat df = new DecimalFormat("#.##");
+        double subTotal = 0d;
         for (int k = 1; k < jComboBox1.getItemCount(); k++) {
             details += jComboBox1.getItemAt(k) + " : \n";
-            int categoryTotal = 0;
+            double categoryTotal = 0d;
             for (int j = 0; j < model.getRowCount(); j++) {
                 if (model.getValueAt(j, 4).equals(jComboBox1.getItemAt(k))) {
                     details += "|- " + model.getValueAt(j, 1) + "\t["
                             + model.getValueAt(j, 2)
                             + "]\t" + model.getValueAt(j, 3) + "\n";
-                    categoryTotal += Integer.parseInt(model.getValueAt(j, 3)
+                    categoryTotal += Double.parseDouble(model.getValueAt(j, 3)
                             .toString());
                 }
             }
-            details += "[Total : " + categoryTotal + "]\n\n";
+            details += "[Total : " + df.format(categoryTotal) + "]\n\n";
             subTotal += categoryTotal;
         }
-        details += "[Sub Total : " + subTotal + "]";
+        details += "[Sub Total : " + df.format(subTotal) + "]";
 
         jTextArea1.setText(details);
 
@@ -261,7 +265,8 @@ public class Cart extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt0 = conn.createStatement();
-                    ResultSet rs0 = stmt0.executeQuery("SELECT * "
+                    ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
+                            + "printf('%.2f', price), category "
                             + "FROM material "
                             + "WHERE category = '" + jComboBox1.getSelectedIndex() + "'");
                     while (rs0.next()) {
@@ -285,7 +290,8 @@ public class Cart extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT * "
+                    ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                            + "printf('%.2f', price), category "
                             + "FROM material "
                             + "WHERE name LIKE '" + jTextField1.getText() + "%'");
                     while (rs.next()) {
