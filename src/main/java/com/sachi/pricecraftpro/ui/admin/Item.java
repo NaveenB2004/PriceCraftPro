@@ -677,15 +677,22 @@ public class Item extends javax.swing.JFrame {
                 model.setRowCount(0);
                 try {
                     openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id, name, "
-                            + "printf('%.2f', price) "
-                            + "FROM material "
-                            + "WHERE category = '" + jComboBox3.getSelectedIndex() + "'");
-                    while (rs.next()) {
-                        Object[] row = {rs.getString(1), rs.getString(2),
-                            rs.getString(3), jComboBox3.getSelectedItem()};
-                        model.addRow(row);
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT id "
+                            + "FROM category "
+                            + "WHERE name = '" + jComboBox3.getSelectedItem()
+                                    .toString() + "'");
+                    while (rs0.next()) {
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                                + "printf('%.2f', price) "
+                                + "FROM material "
+                                + "WHERE category = '" + rs0.getString(1) + "'");
+                        while (rs.next()) {
+                            Object[] row = {rs.getString(1), rs.getString(2),
+                                rs.getString(3), jComboBox3.getSelectedItem()};
+                            model.addRow(row);
+                        }
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(Item.class.getName())
