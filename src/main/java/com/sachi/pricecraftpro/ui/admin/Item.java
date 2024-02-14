@@ -544,11 +544,6 @@ public class Item extends javax.swing.JFrame {
 
         jButton3.setEnabled(false);
         jButton5.setEnabled(false);
-
-        Enumeration<AbstractButton> enumeration = buttonGroup1.getElements();
-        while (enumeration.hasMoreElements()) {
-            enumeration.nextElement().setSelected(false);
-        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -568,11 +563,6 @@ public class Item extends javax.swing.JFrame {
         jButton6.setEnabled(false);
 
         jTable1.clearSelection();
-        
-        Enumeration<AbstractButton> enumeration = buttonGroup2.getElements();
-        while (enumeration.hasMoreElements()) {
-            enumeration.nextElement().setSelected(false);
-        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
