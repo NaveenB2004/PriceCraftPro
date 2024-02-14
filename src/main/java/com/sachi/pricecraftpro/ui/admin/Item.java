@@ -547,7 +547,7 @@ public class Item extends javax.swing.JFrame {
 
         Enumeration<AbstractButton> enumeration = buttonGroup1.getElements();
         while (enumeration.hasMoreElements()) {
-            enumeration.nextElement().setEnabled(false);
+            enumeration.nextElement().setSelected(false);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -571,7 +571,7 @@ public class Item extends javax.swing.JFrame {
         
         Enumeration<AbstractButton> enumeration = buttonGroup2.getElements();
         while (enumeration.hasMoreElements()) {
-            enumeration.nextElement().setEnabled(false);
+            enumeration.nextElement().setSelected(false);
         }
     }//GEN-LAST:event_jButton6ActionPerformed
 
