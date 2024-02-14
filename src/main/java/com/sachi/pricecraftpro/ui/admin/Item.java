@@ -111,7 +111,7 @@ public class Item extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void clearMaterial() {
         jLabel9.setText("---");
         jTextField3.setText("");
@@ -693,6 +693,15 @@ public class Item extends javax.swing.JFrame {
                     && !jTextField4.getText().equals("")
                     && jComboBox2.getSelectedIndex() != 0) {
                 try {
+                    if (Double.parseDouble(jTextField4.getText()) <= 0) {
+                        JOptionPane.showMessageDialog(this, "Invalid Price!");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Invalid Price!");
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, e);
+                }
+                try {
                     openConn();
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate("INSERT INTO material "
@@ -719,6 +728,15 @@ public class Item extends javax.swing.JFrame {
             if (!jTextField3.getText().equals("")
                     && !jTextField4.getText().equals("")
                     && jComboBox2.getSelectedIndex() != 0) {
+                try {
+                    if (Double.parseDouble(jTextField4.getText()) <= 0) {
+                        JOptionPane.showMessageDialog(this, "Invalid Price!");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Invalid Price!");
+                    Logger.getLogger(Item.class.getName())
+                            .log(Level.SEVERE, null, e);
+                }
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
