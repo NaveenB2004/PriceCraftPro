@@ -11,16 +11,21 @@ public class PriceCraftPro {
 
     public static void main(String[] args) {
         FlatDarkLaf.setup();
+        
         Splash s = new Splash();
         s.setVisible(true);
+        
         DBConnection.checkDb();
+        
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ex) {
             Logger.getLogger(PriceCraftPro.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
+        
         s.dispose();
+        
         new Home().setVisible(true);
     }
 }

@@ -267,16 +267,23 @@ public class Cart extends javax.swing.JFrame {
             } else {
                 try {
                     openConn();
-                    Statement stmt0 = conn.createStatement();
-                    ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
-                            + "printf('%.2f', price), category "
-                            + "FROM material "
-                            + "WHERE category = '" + jComboBox1.getSelectedIndex() + "'");
-                    while (rs0.next()) {
-                        Object[] row = {rs0.getString(1),
-                            rs0.getString(2), rs0.getString(3),
-                            jComboBox1.getSelectedItem().toString()};
-                        model.addRow(row);
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT id "
+                            + "FROM category "
+                            + "WHERE name = '" + jComboBox1.getSelectedItem()
+                                    .toString() + "'");
+                    while (rs.next()) {
+                        Statement stmt0 = conn.createStatement();
+                        ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
+                                + "printf('%.2f', price), category "
+                                + "FROM material "
+                                + "WHERE category = '" + rs.getString(1) + "'");
+                        while (rs0.next()) {
+                            Object[] row = {rs0.getString(1),
+                                rs0.getString(2), rs0.getString(3),
+                                jComboBox1.getSelectedItem().toString()};
+                            model.addRow(row);
+                        }
                     }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
@@ -296,7 +303,8 @@ public class Cart extends javax.swing.JFrame {
                     ResultSet rs = stmt.executeQuery("SELECT id, name, "
                             + "printf('%.2f', price), category "
                             + "FROM material "
-                            + "WHERE name LIKE '" + jTextField1.getText() + "%'");
+                            + "WHERE LOWER(name) LIKE "
+                            + "LOWER('%" + jTextField1.getText() + "%')");
                     while (rs.next()) {
                         Statement stmt0 = conn.createStatement();
                         ResultSet rs0 = stmt0.executeQuery("SELECT name "
@@ -977,6 +985,7 @@ public class Cart extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         saveOperation();
+        addMenuItems();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

@@ -322,7 +322,7 @@ public class SignUp extends javax.swing.JFrame {
                     conn = new DBConnection().CONN();
                     Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT COUNT(id) "
-                            + "FROM login WHERE username='" + jTextField1.getText() + "';");
+                            + "FROM login WHERE username='" + jTextField1.getText() + "'");
                     while (rs.next()) {
                         if (rs.getInt(1) == 0) {
                             Statement stmt0 = conn.createStatement();
