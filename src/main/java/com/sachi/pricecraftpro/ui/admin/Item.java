@@ -666,7 +666,8 @@ public class Item extends javax.swing.JFrame {
                 try {
                     openConn();
                     Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id, name, price "
+                    ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                            + "printf('%.2f', price) "
                             + "FROM material "
                             + "WHERE category = '" + jComboBox3.getSelectedIndex() + "'");
                     while (rs.next()) {
