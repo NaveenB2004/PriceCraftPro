@@ -75,7 +75,8 @@ public class Item extends javax.swing.JFrame {
         try {
             openConn();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * "
+            ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                    + "printf('%.2f',price) , category "
                     + "FROM material");
             while (rs.next()) {
                 Statement stmt0 = conn.createStatement();
