@@ -897,7 +897,7 @@ public class Cart extends javax.swing.JFrame {
             if (Integer.parseInt(units) > 0) {
                 Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
                     model0.getValueAt(jTable2.getSelectedRow(), 1),
-                    units, Integer.parseInt(model0.getValueAt(jTable2.getSelectedRow(), 2)
+                    units, Double.parseDouble(model0.getValueAt(jTable2.getSelectedRow(), 2)
                     .toString()) * Integer.parseInt(units),
                     model0.getValueAt(jTable2.getSelectedRow(), 3)};
 
