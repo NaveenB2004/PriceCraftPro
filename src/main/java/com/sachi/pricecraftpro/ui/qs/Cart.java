@@ -36,11 +36,14 @@ public class Cart extends javax.swing.JFrame {
     public static String id = null;
     Connection conn;
     boolean unsaved = false;
+    DecimalFormat df;
 
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
 
+        df = new DecimalFormat("#.00");
+        
         new Thread(() -> {
             panelOperations(false);
 
@@ -225,7 +228,6 @@ public class Cart extends javax.swing.JFrame {
         details += "Estimate ID : \t" + jLabel4.getText() + "\n\n";
 
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        DecimalFormat df = new DecimalFormat("#.##");
         double subTotal = 0d;
         for (int k = 1; k < jComboBox1.getItemCount(); k++) {
             details += jComboBox1.getItemAt(k) + " : \n";
@@ -234,7 +236,8 @@ public class Cart extends javax.swing.JFrame {
                 if (model.getValueAt(j, 4).equals(jComboBox1.getItemAt(k))) {
                     details += "|- " + model.getValueAt(j, 1) + "\t["
                             + model.getValueAt(j, 2)
-                            + "]\t" + model.getValueAt(j, 3) + "\n";
+                            + "]\t" + df.format(Double.parseDouble(model
+                                    .getValueAt(j, 3).toString())) + "\n";
                     categoryTotal += Double.parseDouble(model.getValueAt(j, 3)
                             .toString());
                 }
@@ -897,8 +900,9 @@ public class Cart extends javax.swing.JFrame {
             if (Integer.parseInt(units) > 0) {
                 Object[] row = {model0.getValueAt(jTable2.getSelectedRow(), 0),
                     model0.getValueAt(jTable2.getSelectedRow(), 1),
-                    units, Double.parseDouble(model0.getValueAt(jTable2.getSelectedRow(), 2)
-                    .toString()) * Integer.parseInt(units),
+                    units, df.format(Double.parseDouble(model0
+                    .getValueAt(jTable2.getSelectedRow(), 2)
+                    .toString()) * Integer.parseInt(units)),
                     model0.getValueAt(jTable2.getSelectedRow(), 3)};
 
                 model1.addRow(row);
