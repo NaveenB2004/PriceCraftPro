@@ -9,8 +9,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,6 +33,16 @@ public class Item extends javax.swing.JFrame {
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
+
+        jComboBox1.setEnabled(false);
+        jTextField1.setEnabled(false);
+        jButton5.setEnabled(false);
+        jButton3.setEnabled(false);
+        jTextField3.setEnabled(false);
+        jTextField4.setEnabled(false);
+        jComboBox2.setEnabled(false);
+        jButton6.setEnabled(false);
+        jButton4.setEnabled(false);
 
         new Thread(() -> {
             fillCategoryCombo();
@@ -532,6 +544,11 @@ public class Item extends javax.swing.JFrame {
 
         jButton3.setEnabled(false);
         jButton5.setEnabled(false);
+
+        Enumeration<AbstractButton> enumeration = buttonGroup1.getElements();
+        while (enumeration.hasMoreElements()) {
+            enumeration.nextElement().setEnabled(false);
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -551,6 +568,11 @@ public class Item extends javax.swing.JFrame {
         jButton6.setEnabled(false);
 
         jTable1.clearSelection();
+        
+        Enumeration<AbstractButton> enumeration = buttonGroup2.getElements();
+        while (enumeration.hasMoreElements()) {
+            enumeration.nextElement().setEnabled(false);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
