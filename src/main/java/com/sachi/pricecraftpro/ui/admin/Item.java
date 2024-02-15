@@ -25,13 +25,13 @@ public class Item extends javax.swing.JFrame {
                 getClass().getResource("/icon.png")));
         startup();
     }
-    
+
     Connection conn;
-    
+
     private void startup() {
         Loading l = new Loading();
         l.setVisible(true);
-        
+
         jComboBox1.setEnabled(false);
         jTextField1.setEnabled(false);
         jButton5.setEnabled(false);
@@ -41,25 +41,25 @@ public class Item extends javax.swing.JFrame {
         jComboBox2.setEnabled(false);
         jButton6.setEnabled(false);
         jButton4.setEnabled(false);
-        
+
         new Thread(() -> {
             fillCategoryCombo();
-            
+
             fillTable();
-            
+
             l.dispose();
         }).start();
     }
-    
+
     private void fillCategoryCombo() {
         jComboBox1.removeAllItems();
         jComboBox2.removeAllItems();
         jComboBox3.removeAllItems();
-        
+
         jComboBox1.addItem("Please Select");
         jComboBox2.addItem("Please Select");
         jComboBox3.addItem("All");
-        
+
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -77,11 +77,11 @@ public class Item extends javax.swing.JFrame {
             closeConn();
         }
     }
-    
+
     private void fillTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        
+
         try {
             openConn();
             Statement stmt = conn.createStatement();
@@ -106,11 +106,11 @@ public class Item extends javax.swing.JFrame {
             closeConn();
         }
     }
-    
+
     private void openConn() {
         conn = new DBConnection().CONN();
     }
-    
+
     private void closeConn() {
         if (conn != null) {
             try {
@@ -121,7 +121,7 @@ public class Item extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void clearMaterial() {
         jLabel9.setText("---");
         jTextField3.setText("");
@@ -534,12 +534,12 @@ public class Item extends javax.swing.JFrame {
         jRadioButton1.setSelected(false);
         jRadioButton2.setSelected(false);
         jRadioButton3.setSelected(false);
-        
+
         jComboBox1.setSelectedIndex(0);
         jComboBox1.setEnabled(false);
         jTextField1.setText("");
         jTextField1.setEnabled(false);
-        
+
         jButton3.setEnabled(false);
         jButton5.setEnabled(false);
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -548,7 +548,7 @@ public class Item extends javax.swing.JFrame {
         jRadioButton4.setSelected(false);
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
-        
+
         jLabel9.setText("---");
         jTextField3.setText("");
         jTextField3.setEnabled(false);
@@ -556,10 +556,10 @@ public class Item extends javax.swing.JFrame {
         jTextField4.setEnabled(false);
         jComboBox2.setSelectedIndex(0);
         jComboBox2.setEnabled(false);
-        
+
         jButton4.setEnabled(false);
         jButton6.setEnabled(false);
-        
+
         jTable1.clearSelection();
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -591,15 +591,26 @@ public class Item extends javax.swing.JFrame {
             if (!jTextField1.getText().equals("")) {
                 try {
                     openConn();
-                    Statement stmt = conn.createStatement();
-                    stmt.executeUpdate("INSERT INTO category "
-                            + "(name) VALUES "
-                            + "('" + jTextField1.getText() + "')");
-                    JOptionPane.showMessageDialog(this, "Success!");
-                    fillCategoryCombo();
-                    
-                    jComboBox1.setSelectedIndex(0);
-                    jTextField1.setText("");
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT COUNT(id) "
+                            + "FROM category "
+                            + "WHERE name = '" + jTextField1.getText() + "'");
+                    while (rs0.next()) {
+                        if (rs0.getInt(1) == 0) {
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate("INSERT INTO category "
+                                    + "(name) VALUES "
+                                    + "('" + jTextField1.getText() + "')");
+                            JOptionPane.showMessageDialog(this, "Success!");
+                            fillCategoryCombo();
+
+                            jComboBox1.setSelectedIndex(0);
+                            jTextField1.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Category already exists!");
+                        }
+                    }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -616,16 +627,27 @@ public class Item extends javax.swing.JFrame {
                     && jComboBox1.getSelectedIndex() != 0) {
                 try {
                     openConn();
-                    Statement stmt = conn.createStatement();
-                    stmt.executeUpdate("UPDATE category "
-                            + "SET name = '" + jTextField1.getText() + "' "
-                            + "WHERE name = '" + jComboBox1.getSelectedItem()
-                                    .toString() + "'");
-                    JOptionPane.showMessageDialog(this, "Success!");
-                    fillCategoryCombo();
-                    
-                    jComboBox1.setSelectedIndex(0);
-                    jTextField1.setText("");
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT COUNT(id) "
+                            + "FROM category "
+                            + "WHERE name = '" + jTextField1.getText() + "'");
+                    while (rs0.next()) {
+                        if (rs0.getInt(1) == 0) {
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate("UPDATE category "
+                                    + "SET name = '" + jTextField1.getText() + "' "
+                                    + "WHERE name = '" + jComboBox1.getSelectedItem()
+                                            .toString() + "'");
+                            JOptionPane.showMessageDialog(this, "Success!");
+                            fillCategoryCombo();
+
+                            jComboBox1.setSelectedIndex(0);
+                            jTextField1.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Category name already used!");
+                        }
+                    }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
                     Logger.getLogger(Item.class.getName())
@@ -634,7 +656,8 @@ public class Item extends javax.swing.JFrame {
                     closeConn();
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid selection or empty field!");
+                JOptionPane.showMessageDialog(this,
+                        "Invalid selection or empty field!");
             }
         }
         if (jRadioButton3.isSelected()) {
@@ -647,7 +670,7 @@ public class Item extends javax.swing.JFrame {
                                     .toString() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
                     fillCategoryCombo();
-                    
+
                     jComboBox1.setSelectedIndex(0);
                     jTextField1.setText("");
                 } catch (SQLException ex) {
@@ -728,16 +751,28 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE name = '" + jComboBox2.getSelectedItem()
                                     .toString() + "'");
                     while (rs0.next()) {
-                        Statement stmt = conn.createStatement();
-                        stmt.executeUpdate("INSERT INTO material "
-                                + "(name, price, category) VALUES "
-                                + "('" + jTextField3.getText() + "', "
-                                + "'" + jTextField4.getText() + "', "
-                                + "'" + rs0.getString(1) + "')");
-                        
-                        JOptionPane.showMessageDialog(this, "Success!");
-                        fillTable();
-                        clearMaterial();
+                        Statement stmt1 = conn.createStatement();
+                        ResultSet rs1 = stmt1.executeQuery("SELECT COUNT(id) "
+                                + "FROM material "
+                                + "WHERE name = '" + jTextField3.getText() + "' "
+                                + "AND category = '" + rs0.getString(1) + "'");
+                        while (rs1.next()) {
+                            if (rs1.getInt(1) == 0) {
+                                Statement stmt = conn.createStatement();
+                                stmt.executeUpdate("INSERT INTO material "
+                                        + "(name, price, category) VALUES "
+                                        + "('" + jTextField3.getText() + "', "
+                                        + "'" + jTextField4.getText() + "', "
+                                        + "'" + rs0.getString(1) + "')");
+
+                                JOptionPane.showMessageDialog(this, "Success!");
+                                fillTable();
+                                clearMaterial();
+                            } else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Item already exists!");
+                            }
+                        }
                     }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
@@ -771,14 +806,26 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE name = '" + jComboBox2.getSelectedItem()
                                     .toString() + "'");
                     while (rs0.next()) {
-                        Statement stmt = conn.createStatement();
-                        stmt.executeUpdate("UPDATE material "
-                                + "SET name = '" + jTextField3.getText() + "', "
-                                + "price = '" + jTextField4.getText() + "', "
-                                + "category = '" + rs0.getString(1) + "' "
-                                + "WHERE id = '" + jLabel9.getText() + "'");
-                        JOptionPane.showMessageDialog(this, "Success!");
-                        fillTable();
+                        Statement stmt1 = conn.createStatement();
+                        ResultSet rs1 = stmt1.executeQuery("SELECT COUNT(id) "
+                                + "FROM material "
+                                + "WHERE name = '" + jTextField3.getText() + "' "
+                                + "AND category = '" + rs0.getString(1) + "'");
+                        while (rs1.next()) {
+                            if (rs1.getInt(1) == 0) {
+                                Statement stmt = conn.createStatement();
+                                stmt.executeUpdate("UPDATE material "
+                                        + "SET name = '" + jTextField3.getText() + "', "
+                                        + "price = '" + jTextField4.getText() + "', "
+                                        + "category = '" + rs0.getString(1) + "' "
+                                        + "WHERE id = '" + jLabel9.getText() + "'");
+                                JOptionPane.showMessageDialog(this, "Success!");
+                                fillTable();
+                            } else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Item name already used!");
+                            }
+                        }
                     }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
