@@ -618,7 +618,7 @@ public class Item extends javax.swing.JFrame {
                     openConn();
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate("UPDATE category "
-                            + "SET name = '" + jTextField1.getText() + "', "
+                            + "SET name = '" + jTextField1.getText() + "' "
                             + "WHERE name = '" + jComboBox1.getSelectedItem()
                                     .toString() + "'");
                     JOptionPane.showMessageDialog(this, "Success!");
