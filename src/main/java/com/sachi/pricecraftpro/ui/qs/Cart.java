@@ -266,75 +266,6 @@ public class Cart extends javax.swing.JFrame {
         }).start();
     }
 
-    private void filter(int filter) {
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setRowCount(0);
-        if (filter == 0) {
-            if (jComboBox1.getSelectedIndex() == 0) {
-                firstTableFill();
-            } else {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id "
-                            + "FROM category "
-                            + "WHERE name = '" + jComboBox1.getSelectedItem()
-                                    .toString() + "'");
-                    while (rs.next()) {
-                        Statement stmt0 = conn.createStatement();
-                        ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
-                                + "printf('%.2f', price), category "
-                                + "FROM material "
-                                + "WHERE category = '" + rs.getString(1) + "'");
-                        while (rs0.next()) {
-                            Object[] row = {rs0.getString(1),
-                                rs0.getString(2), rs0.getString(3),
-                                jComboBox1.getSelectedItem().toString()};
-                            model.addRow(row);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-            }
-        } else {
-            if (jTextField1.getText().equals("")) {
-                firstTableFill();
-            } else {
-                try {
-                    openConn();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id, name, "
-                            + "printf('%.2f', price), category "
-                            + "FROM material "
-                            + "WHERE LOWER(name) LIKE "
-                            + "LOWER('%" + jTextField1.getText() + "%')");
-                    while (rs.next()) {
-                        Statement stmt0 = conn.createStatement();
-                        ResultSet rs0 = stmt0.executeQuery("SELECT name "
-                                + "FROM category "
-                                + "WHERE id = '" + rs.getString(4) + "'");
-                        while (rs0.next()) {
-                            Object[] row = {rs.getString(1), rs.getString(2),
-                                rs.getString(3), rs0.getString(1)};
-                            model.addRow(row);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error!");
-                    Logger.getLogger(Cart.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                } finally {
-                    closeConn();
-                }
-            }
-        }
-    }
-
     private void saveOperation() {
         Loading l = new Loading();
         l.setVisible(true);
@@ -419,9 +350,9 @@ public class Cart extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jTextField2 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -533,12 +464,6 @@ public class Cart extends javax.swing.JFrame {
 
         jLabel5.setText("Material Name : ");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         jButton2.setText("Edit units");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -553,6 +478,12 @@ public class Cart extends javax.swing.JFrame {
             }
         });
 
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -563,7 +494,7 @@ public class Cart extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
+                        .addComponent(jTextField2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -599,7 +530,7 @@ public class Cart extends javax.swing.JFrame {
                             .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel5)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -952,11 +883,6 @@ public class Cart extends javax.swing.JFrame {
         detailsWritter();
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        jComboBox1.setSelectedIndex(0);
-        filter(1);
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String units = JOptionPane.showInputDialog(this, "Enter new value : ");
         try {
@@ -998,8 +924,40 @@ public class Cart extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (jComboBox1.getSelectedItem() != null) {
-            jTextField1.setText("");
-            filter(0);
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+
+            if (jComboBox1.getSelectedIndex() == 0) {
+                firstTableFill();
+            } else {
+                try {
+                    openConn();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT id "
+                            + "FROM category "
+                            + "WHERE name = '" + jComboBox1.getSelectedItem()
+                                    .toString() + "'");
+                    while (rs.next()) {
+                        Statement stmt0 = conn.createStatement();
+                        ResultSet rs0 = stmt0.executeQuery("SELECT id, name, "
+                                + "printf('%.2f', price), category "
+                                + "FROM material "
+                                + "WHERE category = '" + rs.getString(1) + "'");
+                        while (rs0.next()) {
+                            Object[] row = {rs0.getString(1),
+                                rs0.getString(2), rs0.getString(3),
+                                jComboBox1.getSelectedItem().toString()};
+                            model.addRow(row);
+                        }
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error!");
+                    Logger.getLogger(Cart.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    closeConn();
+                }
+            }
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
@@ -1030,6 +988,42 @@ public class Cart extends javax.swing.JFrame {
         jTextArea1.setText("");
         firstTableFill();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0);
+
+        if (jTextField2.getText().equals("")) {
+            firstTableFill();
+        } else {
+            try {
+                openConn();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT id, name, "
+                        + "printf('%.2f', price), category "
+                        + "FROM material "
+                        + "WHERE LOWER(name) LIKE "
+                        + "LOWER('%" + jTextField2.getText() + "%')");
+                while (rs.next()) {
+                    Statement stmt0 = conn.createStatement();
+                    ResultSet rs0 = stmt0.executeQuery("SELECT name "
+                            + "FROM category "
+                            + "WHERE id = '" + rs.getString(4) + "'");
+                    while (rs0.next()) {
+                        Object[] row = {rs.getString(1), rs.getString(2),
+                            rs.getString(3), rs0.getString(1)};
+                        model.addRow(row);
+                    }
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error!");
+                Logger.getLogger(Cart.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            } finally {
+                closeConn();
+            }
+        }
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1097,6 +1091,6 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
