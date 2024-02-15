@@ -890,11 +890,11 @@ public class Cart extends javax.swing.JFrame {
                 DefaultTableModel modelx = (DefaultTableModel) jTable2.getModel();
                 DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
 
-                int price = 0;
+                double price = 0;
                 for (int j = 0; j < modelx.getRowCount(); j++) {
                     if (modelx.getValueAt(j, 0).toString()
                             .equals(model.getValueAt(jTable3.getSelectedRow(), 0))) {
-                        price = Integer.parseInt(modelx.getValueAt(j, 2)
+                        price = Double.parseDouble(modelx.getValueAt(j, 2)
                                 .toString());
                         break;
                     }
