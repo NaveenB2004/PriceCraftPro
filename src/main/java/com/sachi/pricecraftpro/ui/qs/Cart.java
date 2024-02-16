@@ -249,11 +249,11 @@ public class Cart extends javax.swing.JFrame {
                                 .toString());
                     }
                 }
-                details += "[Total : " + df.format(categoryTotal) + "]\n\n";
+                details += "[Sub Total : " + df.format(categoryTotal) + "]\n\n";
             }
             subTotal += categoryTotal;
         }
-        details += "[Sub Total : " + df.format(subTotal) + "]";
+        details += "[Grand Total : " + df.format(subTotal) + "]";
 
         jTextArea1.setText(details);
 
@@ -886,7 +886,7 @@ public class Cart extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String units = JOptionPane.showInputDialog(this, "Enter new value : ");
         try {
-            if (Integer.parseInt(units) > 0) {
+            if (Integer.parseInt(units) <= 0) {
                 DefaultTableModel modelx = (DefaultTableModel) jTable2.getModel();
                 DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
 
