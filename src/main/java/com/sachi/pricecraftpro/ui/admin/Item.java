@@ -806,26 +806,14 @@ public class Item extends javax.swing.JFrame {
                             + "WHERE name = '" + jComboBox2.getSelectedItem()
                                     .toString() + "'");
                     while (rs0.next()) {
-                        Statement stmt1 = conn.createStatement();
-                        ResultSet rs1 = stmt1.executeQuery("SELECT COUNT(id) "
-                                + "FROM material "
-                                + "WHERE name = '" + jTextField3.getText() + "' "
-                                + "AND category = '" + rs0.getString(1) + "'");
-                        while (rs1.next()) {
-                            if (rs1.getInt(1) == 0) {
-                                Statement stmt = conn.createStatement();
-                                stmt.executeUpdate("UPDATE material "
-                                        + "SET name = '" + jTextField3.getText() + "', "
-                                        + "price = '" + jTextField4.getText() + "', "
-                                        + "category = '" + rs0.getString(1) + "' "
-                                        + "WHERE id = '" + jLabel9.getText() + "'");
-                                JOptionPane.showMessageDialog(this, "Success!");
-                                fillTable();
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        "Item name already used!");
-                            }
-                        }
+                        Statement stmt = conn.createStatement();
+                        stmt.executeUpdate("UPDATE material "
+                                + "SET name = '" + jTextField3.getText() + "', "
+                                + "price = '" + jTextField4.getText() + "', "
+                                + "category = '" + rs0.getString(1) + "' "
+                                + "WHERE id = '" + jLabel9.getText() + "'");
+                        JOptionPane.showMessageDialog(this, "Success!");
+                        fillTable();
                     }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error!");
