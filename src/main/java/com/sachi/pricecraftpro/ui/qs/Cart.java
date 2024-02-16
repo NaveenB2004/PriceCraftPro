@@ -181,7 +181,7 @@ public class Cart extends javax.swing.JFrame {
                                 + "WHERE id = '" + rs0.getString(4) + "'");
                         while (rs1.next()) {
                             Object[] row = {rs0.getString(1), rs0.getString(2),
-                                rs.getString(2), rs.getInt(2) * rs0.getDouble(3),
+                                rs.getString(2), df.format(rs.getInt(2) * rs0.getDouble(3)),
                                 rs1.getString(1)};
                             model.addRow(row);
                         }
@@ -886,7 +886,7 @@ public class Cart extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String units = JOptionPane.showInputDialog(this, "Enter new value : ");
         try {
-            if (Integer.parseInt(units) <= 0) {
+            if (Integer.parseInt(units) > 0) {
                 DefaultTableModel modelx = (DefaultTableModel) jTable2.getModel();
                 DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
 
@@ -900,14 +900,16 @@ public class Cart extends javax.swing.JFrame {
                     }
                 }
 
+                String value = df.format(Integer.parseInt(units) * price);
+
                 model.setValueAt(units, jTable3.getSelectedRow(), 2);
-                model.setValueAt(Integer.parseInt(units) * price,
-                        jTable3.getSelectedRow(), 3);
+                model.setValueAt(value, jTable3.getSelectedRow(), 3);
 
                 unsaved = true;
 
                 detailsWritter();
             } else {
+                System.out.println("here");
                 JOptionPane.showMessageDialog(this, "Invalid value!");
             }
         } catch (HeadlessException | NumberFormatException e) {
