@@ -255,7 +255,7 @@ public class Item extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Push");
+        jButton3.setText("Submit");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -383,7 +383,7 @@ public class Item extends javax.swing.JFrame {
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select", " " }));
 
-        jButton4.setText("Push");
+        jButton4.setText("Submit");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);

@@ -29,10 +29,9 @@ public class LogIn extends javax.swing.JFrame {
     Connection conn = null;
     public static int id = 0;
     public static String name = "";
+    int type;
 
     private void startup() {
-        jComboBox1.setBorder(BorderFactory
-                .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
         jTextField1.setBorder(BorderFactory
                 .createMatteBorder(0, 0, 1, 0, new Color(217, 217, 217)));
         jPasswordField1.setBorder(BorderFactory
@@ -53,10 +52,8 @@ public class LogIn extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
@@ -102,29 +99,17 @@ public class LogIn extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Log In");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Account Role : ");
-
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Username : ");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Password : ");
 
-        jComboBox1.setBackground(new java.awt.Color(0, 0, 0));
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select", "QS", "Admin" }));
-
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
 
         jPasswordField1.setBackground(new java.awt.Color(0, 0, 0));
         jPasswordField1.setForeground(new java.awt.Color(255, 255, 255));
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
-            }
-        });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(217, 217, 217));
@@ -176,9 +161,7 @@ public class LogIn extends javax.swing.JFrame {
                                         .addComponent(jPasswordField1)
                                         .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jTextField1)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jComboBox1, 0, 221, Short.MAX_VALUE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)))))
                         .addGap(0, 12, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -192,11 +175,7 @@ public class LogIn extends javax.swing.JFrame {
                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(41, 41, 41)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -206,7 +185,7 @@ public class LogIn extends javax.swing.JFrame {
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addGap(24, 24, 24)
+                .addGap(55, 55, 55)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
@@ -244,17 +223,16 @@ public class LogIn extends javax.swing.JFrame {
         loading.setVisible(true);
 
         new Thread(() -> {
-            if (validateLogin(jComboBox1.getSelectedIndex(),
-                    jTextField1.getText(),
+            if (validateLogin(jTextField1.getText(),
                     String.valueOf(jPasswordField1.getPassword()))) {
-                switch (jComboBox1.getSelectedIndex()) {
+                switch (type) {
                     case 1 -> {
                         // goto qs
                         new Customer().setVisible(true);
                         this.dispose();
                     }
                     case 2 -> {
-                        // goto seller
+                        // goto admin
                         new Item().setVisible(true);
                         this.dispose();
                     }
@@ -276,44 +254,36 @@ public class LogIn extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
-
-    private boolean validateLogin(int type, String username, String password) {
-        if (type == 0) {
-            return false;
-        } else {
-            try {
-                conn = new DBConnection().CONN();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(id), id, name "
-                        + "FROM login "
-                        + "WHERE type = '" + type + "' AND "
-                        + "username = '" + username + "' AND "
-                        + "password = '" + password + "'");
-                while (rs.next()) {
-                    if (rs.getInt(1) != 0) {
-                        id = rs.getInt(2);
-                        name = rs.getString(3);
-                        return true;
-                    }
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(LogIn.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(LogIn.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                    }
+    private boolean validateLogin(String username, String password) {
+        try {
+            conn = new DBConnection().CONN();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(id), id, name, type "
+                    + "FROM login "
+                    + "WHERE username = '" + username + "' AND "
+                    + "password = '" + password + "'");
+            while (rs.next()) {
+                if (rs.getInt(1) != 0) {
+                    id = rs.getInt(2);
+                    name = rs.getString(3);
+                    type = rs.getInt(4);
+                    return true;
                 }
             }
-            return false;
+        } catch (SQLException ex) {
+            Logger.getLogger(LogIn.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogIn.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                }
+            }
         }
+        return false;
     }
 
     /**
@@ -356,9 +326,7 @@ public class LogIn extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton6;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
